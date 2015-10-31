@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>se.feomedia.operations</groupId>
+	<version>0.1.0-SNAPSHOT</version>
+	<artifactId>artemis-odb-operations</artifactId>
+	<packaging>jar</packaging>
+	<name>artemis-odb-operations</name>
+	<description>Operations mini-DSL specialized to deal with artemis-odb entities</description>
+
+	<properties>
+		<artemis.ideFriendlyPacking>false</artemis.ideFriendlyPacking>
+		<artemis.enableArtemisPlugin>false</artemis.enableArtemisPlugin>
+		<artemis.version>1.1.2</artemis.version>
+		<libgdx.version>1.7.0</libgdx.version>
+	</properties>
+
+
+    <scm>
+        <url>https://github.com/feomedia/artemis-odb-operations/</url>
+        <connection>scm:git:git@github.com:feomedia/artemis-odb-operations.git</connection>
+        <developerConnection>scm:git:git@github.com:feomedia/artemis-odb-operations.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <issueManagement>
+        <url>https://github.com/feomedia/artemis-odb-operations/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+
+	<profiles>
+		<profile>
+			<id>optimize</id>
+			<properties>
+				<artemis.ideFriendlyPacking>false</artemis.ideFriendlyPacking>
+				<artemis.enableArtemisPlugin>true</artemis.enableArtemisPlugin>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>net.onedaybeard.artemis</groupId>
+						<artifactId>artemis-odb-maven-plugin</artifactId>
+						<version>${artemis.version}</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>artemis</goal>
+								</goals>
+								<configuration>
+									<ideFriendlyPacking>${artemis.ideFriendlyPacking}</ideFriendlyPacking>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx</artifactId>
+			<version>${libgdx.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb</artifactId>
+			<version>${artemis.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb-serializer-json-libgdx</artifactId>
+			<version>${artemis.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
