@@ -1,5 +1,6 @@
 package se.feomedia.orion.operation;
 
+import com.artemis.World;
 import com.badlogic.gdx.math.Interpolation;
 import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
@@ -7,6 +8,7 @@ import se.feomedia.orion.OperationTree;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static se.feomedia.orion.OperationFactory.seconds;
 
 public abstract class TemporalOperation extends Operation {
 	public float acc;
@@ -42,7 +44,19 @@ public abstract class TemporalOperation extends Operation {
 			: 1.0f;
 	}
 
+	protected final float alpha() {
+		return interpolation.apply(percent());
+	}
+
 	public abstract static class TemporalExecutor<T extends TemporalOperation> extends Executor<T> {
+
+		@Override
+		protected void begin(T op, OperationTree node) {
+			super.begin(op, node);
+
+			// ensure we're running at least once per frame
+			op.duration = seconds(op.duration);
+		}
 
 		@Override
 		protected final float act(float delta, T operation, OperationTree node) {
