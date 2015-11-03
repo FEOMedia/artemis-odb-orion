@@ -7,9 +7,7 @@ import com.artemis.annotations.Wire;
 public abstract class Executor<T extends Operation> {
 	public Operation parent;
 
-	protected void initialize(World world) {
-		world.inject(this);
-	}
+	public void initialize(World world) {}
 
 	/**
 	 * Runs every tick.

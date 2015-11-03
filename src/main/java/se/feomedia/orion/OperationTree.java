@@ -5,16 +5,14 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import se.feomedia.orion.system.OperationSystem;
 
-/**
- * A hierarchical data structure operating on a single executorType. A node's
- * value can be <code>null</code>.
- */
 public class OperationTree {
 	private final Array<OperationTree> children;
 
 	private OperationTree parent;
 	private Operation operation;
 	private transient Executor<?> executor;
+
+	private static final Friend friend = new Friend();
 
 	protected OperationTree() {
 		this(null, null);
@@ -46,21 +44,6 @@ public class OperationTree {
 		children.add(child);
 	}
 
-	/**
-	 * Gets the distance between the current node and the root node.
-	 *
-	 * @return Distance to root node.
-	 */
-	public int getDepth() {
-		int depth = 0;
-		OperationTree t = this;
-		while ((t = t.parent) != null) {
-			depth++;
-		}
-
-		return depth;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder indent = new StringBuilder();
@@ -76,26 +59,33 @@ public class OperationTree {
 		return children;
 	}
 
-	public void initialize(World world) {
-		initialize(world.getSystem(OperationSystem.class));
+	public void initialize(World world, int entityId, OperationSystem.Friend friend) {
+		initialize(world.getSystem(OperationSystem.class), entityId);
 	}
 
-	protected void initialize(OperationSystem operations) {
-		executor = operations.getExecutor(operation);
+	private void initialize(OperationSystem operations, int entityId) {
+		executor = operations.getExecutor(operation, friend);
+
+		operation.entityId = entityId;
+		operation.started = false;
 		for (int i = 0, s = children.size; s > i ; i++) {
-			children.get(i).initialize(operations);
+			children.get(i).initialize(operations, entityId);
 		}
 	}
 
-	public void reset() {
-		reset(this);
+	public void clear() {
+		clear(this);
 	}
 
-	private void reset(OperationTree ot) {
+	private void clear(OperationTree ot) {
 		Pools.free(ot.operation);
 		ot.operation = null;
 		for (OperationTree node : ot.children) {
-			reset(node);
+			clear(node);
 		}
+	}
+
+	public static final class Friend {
+		private Friend() {}
 	}
 }

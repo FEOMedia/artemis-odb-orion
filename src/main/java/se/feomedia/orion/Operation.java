@@ -5,11 +5,11 @@ import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.system.OperationSystem;
 
 public abstract class Operation implements Pool.Poolable {
-	protected transient boolean started;
-	protected transient int entityId;
+	protected transient int entityId = -1;
+
+	protected boolean started;
 
 	public abstract Class<? extends Executor> executorType();
-
 	protected abstract boolean isComplete();
 
 	protected OperationTree toNode() {

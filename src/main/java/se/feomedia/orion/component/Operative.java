@@ -2,7 +2,6 @@ package se.feomedia.orion.component;
 
 import com.artemis.PooledComponent;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 import se.feomedia.orion.OperationTree;
 
 public class Operative extends PooledComponent {
@@ -10,7 +9,11 @@ public class Operative extends PooledComponent {
 
 	@Override
 	protected void reset() {
-		Pools.freeAll(operations);
+		OperationTree[] ops = operations.items;
+		for (int i = 0, s = operations.size; s > i ; i++) {
+			ops[i].clear();
+		}
+
 		operations.clear();
 	}
 }

@@ -8,13 +8,41 @@ import com.artemis.managers.TagManager;
 import junit.framework.TestCase;
 import org.junit.Test;
 import se.feomedia.orion.operation.DelayOperation;
-import se.feomedia.orion.operation.SingleUseOperation;
+import se.feomedia.orion.operation.KillOperation;
+import se.feomedia.orion.operation.MySingleUseOperation;
 import se.feomedia.orion.system.OperationSystem;
 
 import static se.feomedia.orion.OperationFactory.*;
 import static se.feomedia.orion.OperationTestUtil.operatives;
 
 public class OperationTest extends TestCase {
+	@Test
+	public void test_hiearhical_clean_up() {
+		World world = new World(new WorldConfiguration()
+			.setSystem(OperationSystem.class));
+
+		KillOperation killOperation = killEntity();
+
+		sequence(
+			sequence(
+				sequence(
+					parallel(
+						sequence(),
+						sequence(killOperation)
+					)
+				)
+			)
+		).register(world, world.create());
+
+		world.delta = .25f;
+		world.process();
+
+		assertSame(killOperation, killEntity());
+		assertNotSame(killOperation, killEntity());
+	}
+
+
+
 	@Test
 	public void testWireInjection() {
 		World world = new World(new WorldConfiguration()
@@ -193,20 +221,4 @@ public class OperationTest extends TestCase {
 		}
 	}
 
-	public static class MySingleUseOperation extends SingleUseOperation {
-		int timesRun;
-
-		@Override
-		public Class<? extends Executor> executorType() {
-			return MySingleUseExecutor.class;
-		}
-
-		public static class MySingleUseExecutor extends SingleUseExecutor<MySingleUseOperation> {
-			@Override
-			protected void act(MySingleUseOperation op, OperationTree node) {
-				op.timesRun++;
-				assertEquals(1, op.timesRun);
-			}
-		}
-	}
 }

@@ -2,9 +2,10 @@ package se.feomedia.orion;
 
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
+import se.feomedia.orion.operation.NullOperation;
 
 import static java.lang.Math.min;
+import static se.feomedia.orion.OperationFactory.operation;
 
 public abstract class ParentingOperation extends Operation {
 	public boolean completed;
@@ -17,6 +18,9 @@ public abstract class ParentingOperation extends Operation {
 	}
 
 	public void addChild(Operation op) {
+		if (op == null)
+			op = operation(NullOperation.class);
+
 		operations.add(op);
 	}
 
@@ -24,7 +28,8 @@ public abstract class ParentingOperation extends Operation {
 	protected OperationTree toNode() {
 		OperationTree tree = super.toNode();
 		for (int i = 0; i < operations.size; i++) {
-			tree.add(operations.get(i).toNode());
+			Operation operation = operations.get(i);
+			tree.add(operation.toNode());
 		}
 
 		return tree;

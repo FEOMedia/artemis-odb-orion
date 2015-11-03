@@ -122,15 +122,17 @@ public final class OperationFactory {
 		return op;
 	}
 
-	/*
 	public static DelayTickOperation delayTick(int ticksToWait) {
 		DelayTickOperation action = operation(DelayTickOperation.class);
-		action.accumulated = 0;
 		action.ticksToWait = ticksToWait;
 
 		return action;
 	}
-	*/
+
+	public static KillOperation killEntity() {
+		KillOperation op = operation(KillOperation.class);
+		return op;
+	}
 
 	public static IfElseOperation ifElse(boolean b, Operation ifTrue, Operation ifFalse) {
 		IfElseOperation op = operation(IfElseOperation.class);

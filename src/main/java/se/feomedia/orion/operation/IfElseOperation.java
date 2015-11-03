@@ -13,6 +13,11 @@ public class IfElseOperation extends ParentingOperation {
 		return IfElseExecutor.class;
 	}
 
+	@Override
+	protected boolean isComplete() {
+		return super.isComplete();
+	}
+
 	public void configure(boolean b, Operation ifTrue, Operation ifFalse) {
 		isTrue = b;
 		addChild(ifFalse);

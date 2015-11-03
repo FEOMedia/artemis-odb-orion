@@ -16,22 +16,22 @@ public class OperationSystem extends IteratingSystem {
 
 	private ObjectMap<Class<? extends Executor>, Executor> executors = new ObjectMap<>();
 
+	private final Friend friend = new Friend();
+
 	public OperationSystem() {
 		super(all(Operative.class));
 	}
 
 	public void register(int entityId, OperationTree operation) {
-		operation.initialize(world);
+		operation.initialize(world, entityId, friend);
 		operativeMapper.create(entityId).operations.add(operation);
 	}
 
-	public Executor getExecutor(Operation operation) {
+	public Executor getExecutor(Operation operation, OperationTree.Friend friend) {
 		Executor executor = executors.get(operation.executorType());
 		if (executor == null) {
 			executor = createExecutor(operation);
 			executors.put(operation.executorType(), executor);
-
-			world.inject(executor);
 		}
 
 		return executor;
@@ -40,6 +40,10 @@ public class OperationSystem extends IteratingSystem {
 	private Executor createExecutor(Operation operation) {
 		try {
 			Executor executor = operation.executorType().newInstance();
+
+			world.inject(executor);
+			executor.initialize(world);
+
 			return executor;
 		} catch (InstantiationException e) {
 			throw new RuntimeException(e);
@@ -56,11 +60,15 @@ public class OperationSystem extends IteratingSystem {
 			ot.act(world.delta);
 			if (ot.isComplete()) {
 				OperationTree node = operations.removeIndex(i--);
-				node.reset();
+				node.clear();
 			}
 		}
 
-		if (operations.size == 0)
-			operativeMapper.remove(e);
+		if (operations.size == 0) world.edit(e).remove(Operative.class);
+//			operativeMapper.remove(e); // artemis bug, cancels entity deletion
+	}
+
+	public static final class Friend {
+		private Friend() {}
 	}
 }
