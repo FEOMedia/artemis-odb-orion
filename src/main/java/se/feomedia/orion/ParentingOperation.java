@@ -21,7 +21,7 @@ public abstract class ParentingOperation extends Operation {
 	}
 
 	@Override
-	public OperationTree toNode() {
+	protected OperationTree toNode() {
 		OperationTree tree = super.toNode();
 		for (int i = 0; i < operations.size; i++) {
 			tree.add(operations.get(i).toNode());
@@ -34,6 +34,7 @@ public abstract class ParentingOperation extends Operation {
 	public void reset() {
 		Pools.freeAll(operations);
 		operations.clear();
+		completed = false;
 	}
 
 	@Wire
