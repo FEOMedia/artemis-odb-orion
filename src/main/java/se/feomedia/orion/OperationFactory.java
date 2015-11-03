@@ -1,5 +1,6 @@
 package se.feomedia.orion;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import se.feomedia.orion.operation.*;
@@ -172,5 +173,14 @@ public final class OperationFactory {
 
 	public static Vector2 xy(float x, float y) {
 		return xy.set(x, y);
+	}
+
+	public static <T extends TemporalOperation> T configure(T op,
+	                                                        float duration,
+	                                                        Interpolation interpolation) {
+
+		op.duration = duration;
+		op.interpolation = interpolation;
+		return op;
 	}
 }
