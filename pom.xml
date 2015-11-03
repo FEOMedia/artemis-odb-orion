@@ -11,12 +11,9 @@
 	<description>Operations mini-DSL specialized to deal with artemis-odb entities</description>
 
 	<properties>
-		<artemis.ideFriendlyPacking>false</artemis.ideFriendlyPacking>
-		<artemis.enableArtemisPlugin>false</artemis.enableArtemisPlugin>
 		<artemis.version>1.1.2</artemis.version>
 		<libgdx.version>1.7.0</libgdx.version>
 	</properties>
-
 
     <scm>
         <url>https://github.com/feomedia/orion/</url>
@@ -38,36 +35,6 @@
         <system>GitHub Issues</system>
     </issueManagement>
 
-
-	<profiles>
-		<profile>
-			<id>optimize</id>
-			<properties>
-				<artemis.ideFriendlyPacking>false</artemis.ideFriendlyPacking>
-				<artemis.enableArtemisPlugin>true</artemis.enableArtemisPlugin>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>net.onedaybeard.artemis</groupId>
-						<artifactId>artemis-odb-maven-plugin</artifactId>
-						<version>${artemis.version}</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>artemis</goal>
-								</goals>
-								<configuration>
-									<ideFriendlyPacking>${artemis.ideFriendlyPacking}</ideFriendlyPacking>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
 	<dependencies>
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
@@ -85,6 +52,7 @@
 			<groupId>net.onedaybeard.artemis</groupId>
 			<artifactId>artemis-odb-serializer-json-libgdx</artifactId>
 			<version>${artemis.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
