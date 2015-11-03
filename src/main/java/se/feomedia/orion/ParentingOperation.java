@@ -32,7 +32,6 @@ public abstract class ParentingOperation extends Operation {
 
 	@Override
 	public void reset() {
-		Pools.freeAll(operations);
 		operations.clear();
 		completed = false;
 	}
