@@ -14,7 +14,7 @@ public abstract class Executor<T extends Operation> {
 	 */
 	protected abstract float act(float delta, T operation, OperationTree node);
 
-	protected void begin(Operation operation, OperationTree node) {}
+	protected void begin(T operation, OperationTree node) {}
 
 	public float process(float delta, Operation operation, OperationTree node) {
 		if (operation.isComplete())
