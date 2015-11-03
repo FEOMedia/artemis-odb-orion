@@ -14,14 +14,14 @@ public abstract class Executor<T extends Operation> {
 	 */
 	protected abstract float act(float delta, T operation, OperationTree node);
 
-	protected void begin() {}
+	protected void begin(Operation operation, OperationTree node) {}
 
 	public float process(float delta, Operation operation, OperationTree node) {
 		if (operation.isComplete())
 			return delta;
 
 		if (!operation.started) {
-			begin();
+			begin((T) operation, node);
 			operation.started = true;
 		}
 
