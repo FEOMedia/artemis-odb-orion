@@ -68,6 +68,20 @@ public class OperationSystem extends IteratingSystem {
 //			operativeMapper.remove(e); // artemis bug, cancels entity deletion
 	}
 
+	public void clear(int entityId) {
+		if (!operativeMapper.has(entityId))
+			return;
+
+		Array<OperationTree> operations = operativeMapper.get(entityId).operations;
+		for (int i = 0; i < operations.size; i++) {
+			operations.get(i).clear();
+		}
+
+		operations.clear();
+		
+		operativeMapper.remove(entityId);
+	}
+
 	public static final class Friend {
 		private Friend() {}
 	}
