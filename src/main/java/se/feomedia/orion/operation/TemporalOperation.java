@@ -29,7 +29,7 @@ public abstract class TemporalOperation extends Operation {
 
 	@Override
 	public boolean isComplete() {
-		return percent() == 1.0f;
+		return acc > 0 && percent() == 1.0f;
 	}
 
 	@Override
