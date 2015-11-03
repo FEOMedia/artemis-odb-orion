@@ -47,7 +47,7 @@ public abstract class TemporalOperation extends Operation {
 		@Override
 		protected final float act(float delta, T operation, OperationTree node) {
 			operation.acc += delta;
-			return act(delta, operation.percent(), operation, node);
+			return max(0, act(delta, operation.percent(), operation, node));
 		}
 
 		protected abstract float act(float delta, float alpha, T operation, OperationTree node);
