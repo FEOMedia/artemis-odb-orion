@@ -5,9 +5,9 @@
 
 	<groupId>se.feomedia.operations</groupId>
 	<version>0.1.0-SNAPSHOT</version>
-	<artifactId>artemis-odb-operations</artifactId>
+	<artifactId>orion</artifactId>
 	<packaging>jar</packaging>
-	<name>artemis-odb-operations</name>
+	<name>orion</name>
 	<description>Operations mini-DSL specialized to deal with artemis-odb entities</description>
 
 	<properties>
@@ -19,9 +19,9 @@
 
 
     <scm>
-        <url>https://github.com/feomedia/artemis-odb-operations/</url>
-        <connection>scm:git:git@github.com:feomedia/artemis-odb-operations.git</connection>
-        <developerConnection>scm:git:git@github.com:feomedia/artemis-odb-operations.git</developerConnection>
+        <url>https://github.com/feomedia/orion/</url>
+        <connection>scm:git:git@github.com:feomedia/orion.git</connection>
+        <developerConnection>scm:git:git@github.com:feomedia/orion.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
@@ -34,7 +34,7 @@
     </licenses>
 
     <issueManagement>
-        <url>https://github.com/feomedia/artemis-odb-operations/issues</url>
+        <url>https://github.com/feomedia/orion/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
 

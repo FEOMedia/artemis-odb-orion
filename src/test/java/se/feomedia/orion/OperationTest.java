@@ -1,0 +1,212 @@
+package se.feomedia.orion;
+
+import com.artemis.World;
+import com.artemis.WorldConfiguration;
+import com.artemis.annotations.Wire;
+import com.artemis.managers.GroupManager;
+import com.artemis.managers.TagManager;
+import junit.framework.TestCase;
+import org.junit.Test;
+import se.feomedia.orion.operation.DelayOperation;
+import se.feomedia.orion.operation.SingleUseOperation;
+import se.feomedia.orion.system.OperationSystem;
+
+import static se.feomedia.orion.OperationFactory.*;
+import static se.feomedia.orion.OperationTestUtil.operatives;
+
+public class OperationTest extends TestCase {
+	@Test
+	public void testWireInjection() {
+		World world = new World(new WorldConfiguration()
+				.setSystem(new GroupManager())
+				.setSystem(new TagManager())
+				.setSystem(new OperationSystem()));
+
+		ManagerOperation action = operation(ManagerOperation.class);
+		action.register(world, world.create());
+
+		world.process();
+		world.process();
+	}
+
+	@Test
+	public void testSequentialProcessing() {
+
+		OperationSystem operationSystem = new OperationSystem();
+		World world = new World(new WorldConfiguration()
+				.setSystem(operationSystem));
+
+		DelayOperation[] ds = new DelayOperation[] {
+			delay(0.25f),
+			delay(0.25f),
+			delay(0.25f),
+			delay(0.25f)
+		};
+
+		sequence(ds[0], ds[1], ds[2], ds[3]).register(world, world.create());
+
+		world.delta = 0;
+		world.process();
+
+		assertEquals(1, operatives(world).size());
+
+		for (int i = 0; i < ds.length; i++) {
+			assertFalse(ds[i].isComplete());
+			assertEquals(.25f, ds[i].remaining(), .001f);
+		}
+
+		world.delta = 0.15f;
+		world.process();
+
+		assertFalse(ds[0].isComplete());
+		assertEquals(.25f - 0.15f, ds[0].remaining(), .001f);
+		for (int i = 1; i < ds.length; i++) {
+			assertFalse(ds[i].isComplete());
+			assertEquals(.25f, ds[i].remaining(), .001f);
+		}
+
+		world.delta = 0.75f;
+		world.process();
+
+		for (int i = 0; i < ds.length - 1; i++) {
+			assertTrue(ds[i].isComplete());
+			assertEquals(0f, ds[i].remaining(), 0.0000000f);
+		}
+
+		assertFalse(ds[3].isComplete());
+		assertEquals(.25f - 0.15f, ds[3].remaining(), .001f);
+
+		world.delta = 0.25f;
+		world.process();
+		world.process();
+
+		// orion should be evicted from the system here.
+		assertEquals(0, operatives(world).size());
+
+//		assertEquals(0, operationSystem.getOperations().size);
+	}
+
+	@Test
+	public void testParallelProcessing() {
+		OperationSystem operationSystem = new OperationSystem();
+		World world = new World(new WorldConfiguration()
+				.setSystem(operationSystem));
+
+		DelayOperation[] ds = new DelayOperation[] {
+			delay(0.25f),
+			delay(0.25f),
+			delay(0.25f),
+			delay(0.75f)
+		};
+
+		parallel(ds[0], ds[1], ds[2], ds[3]).register(world, world.create());
+
+		world.delta = 0.000001f;
+		world.process();
+
+		for (int i = 0; i < ds.length - 1; i++) {
+			assertFalse(ds[i].isComplete());
+			assertEquals(.25f, ds[i].remaining(), .001f);
+		}
+
+		world.delta = 0.15f;
+		world.process();
+
+		for (int i = 0; i < ds.length - 1; i++) {
+			assertFalse(ds[i].isComplete());
+			assertEquals(.25f - 0.15f, ds[i].remaining(), .001f);
+		}
+		assertEquals(.75f - 0.15f, ds[3].remaining(), .001f);
+
+		world.delta = 0.5f;
+		world.process();
+
+		for (int i = 0; i < ds.length - 1; i++) {
+			assertTrue(ds[i].isComplete());
+			assertEquals(0f, ds[i].remaining(), 0.0001f);
+		}
+		assertEquals(0.75f - 0.65f, ds[3].remaining(), 0.0001f);
+		assertFalse(ds[3].isComplete());
+
+		world.delta = 0.5f;
+		world.process();
+		world.process();
+
+		// orion should be evicted from the system here.
+		assertEquals(0, operatives(world).size());
+	}
+
+	private static void process(World world) {
+		world.delta = 1f / 60f;
+		world.process();
+	}
+
+	@Test
+	public void testSingleUseOperation() {
+		OperationSystem operationSystem = new OperationSystem();
+		World world = new World(new WorldConfiguration()
+			.setSystem(operationSystem));
+
+		MySingleUseOperation op = operation(MySingleUseOperation.class);
+		op.register(world, world.create());
+
+		process(world);
+
+		assertEquals(0, operatives(world).size());
+		assertSame(op, operation(MySingleUseOperation.class));
+	}
+
+	public static class ManagerOperation extends Operation {
+		private boolean completed;
+
+		@Override
+		public Class<? extends Executor> executorType() {
+			return ManagerExecutor.class;
+		}
+
+		@Override
+		public boolean isComplete() {
+			return completed;
+		}
+
+		@Override
+		public void reset() {
+			completed = false;
+		}
+
+		@Wire
+		public static class ManagerExecutor extends Executor<ManagerOperation> {
+			private GroupManager groupManager;
+			private GroupManager tagManager;
+
+			@Override
+			protected float act(float delta, ManagerOperation op, OperationTree node) {
+				assertNotNull(groupManager);
+				assertNotNull(tagManager);
+
+				op.completed = true;
+
+				groupManager = tagManager = null;
+
+				return delta;
+			}
+		}
+	}
+
+	public static class MySingleUseOperation extends SingleUseOperation {
+		int timesRun;
+
+		@Override
+		public Class<? extends Executor> executorType() {
+			return MySingleUseExecutor.class;
+		}
+
+		public static class MySingleUseExecutor extends SingleUseExecutor<MySingleUseOperation> {
+			@Override
+			protected void act(MySingleUseOperation op, OperationTree node) {
+				op.timesRun++;
+				assertEquals(1, op.timesRun);
+			}
+		}
+	}
+}
