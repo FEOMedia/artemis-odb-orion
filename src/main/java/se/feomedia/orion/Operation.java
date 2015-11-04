@@ -14,7 +14,7 @@ public abstract class Operation implements Pool.Poolable {
 	protected abstract boolean isComplete();
 
 	protected OperationTree toNode() {
-		return new OperationTree(this);
+		return OperationTree.obtain(this);
 	}
 
 	public final void register(World world, int entityId) {

@@ -2,6 +2,7 @@ package se.feomedia.orion;
 
 import com.artemis.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import se.feomedia.orion.system.OperationSystem;
 
@@ -14,21 +15,22 @@ public class OperationTree {
 
 	private static final Friend friend = new Friend();
 
-	protected OperationTree() {
-		this(null, null);
+	private static final Pool<OperationTree> pool = new Pool<OperationTree>() {
+		@Override
+		protected OperationTree newObject() {
+			return new OperationTree();
+		}
+	};
+
+	static OperationTree obtain(Operation operation) {
+		OperationTree tree = pool.obtain();
+		tree.operation = operation;
+
+		return tree;
 	}
 
-	public OperationTree(Operation operation) {
-		this(null, operation);
-	}
-
-	private OperationTree(OperationTree parent, Operation operation) {
-		if (parent != null)
-			parent.children.add(this);
-
+	private OperationTree() {
 		children = new Array<>(OperationTree.class);
-		this.parent = parent;
-		this.operation = operation;
 	}
 
 	public float act(float delta) {
@@ -80,9 +82,13 @@ public class OperationTree {
 	private void clear(OperationTree ot) {
 		Pools.free(ot.operation);
 		ot.operation = null;
+		ot.parent = null;
+		ot.executor = null;
 		for (OperationTree node : ot.children) {
 			clear(node);
 		}
+
+		children.clear();
 	}
 
 	public static final class Friend {
