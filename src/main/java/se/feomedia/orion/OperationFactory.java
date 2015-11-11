@@ -135,18 +135,18 @@ public final class OperationFactory {
 		return op;
 	}
 
-	public static IfElseOperation ifElse(boolean b, Operation ifTrue, Operation ifFalse) {
+	private static IfElseOperation ifElse(boolean b, Operation ifTrue) {
 		IfElseOperation op = operation(IfElseOperation.class);
-		op.configure(b, ifTrue, ifFalse);
+		op.configure(b, ifTrue);
 		return op;
 	}
 
 	public static IfElseOperation ifTrue(boolean b, Operation ifTrue) {
-		return ifElse(b, ifTrue, null);
+		return ifElse(b, ifTrue);
 	}
 
 	public static IfElseOperation ifFalse(boolean b, Operation ifFalse) {
-		return ifElse(b, null, ifFalse);
+		return ifElse(!b, ifFalse);
 	}
 
 	public static <T extends Operation> T operation(Class<T> actionType) {

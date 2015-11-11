@@ -18,4 +18,11 @@ public class Operative extends PooledComponent {
 
 		operations.clear();
 	}
+
+	@Override
+	public String toString() {
+		return "Operative{" +
+			"operations=" + operations +
+			'}';
+	}
 }

@@ -24,7 +24,19 @@ public class OperationSystem extends IteratingSystem {
 
 	public void register(int entityId, OperationTree operation) {
 		operation.initialize(world, entityId, friend);
-		operativeMapper.create(entityId).operations.add(operation);
+		try {
+			operativeMapper.create(entityId).operations.add(operation);
+		} catch (NullPointerException e) {
+			if (operativeMapper == null)
+				throw new RuntimeException("operativeMapper was null");
+
+			String active = world.getEntityManager().isActive(entityId) ? "active: " : "killed: ";
+			String s = active + entityId +
+				": " +
+				operativeMapper +
+				"=" + operativeMapper.get(entityId);
+			throw new NullPointerException(s);
+		}
 	}
 
 	public Executor getExecutor(Operation operation, OperationTree.Friend friend) {

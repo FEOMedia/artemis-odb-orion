@@ -1,9 +1,6 @@
 package se.feomedia.orion.operation;
 
-import se.feomedia.orion.Executor;
-import se.feomedia.orion.Operation;
-import se.feomedia.orion.OperationTree;
-import se.feomedia.orion.ParentingOperation;
+import se.feomedia.orion.*;
 
 public class IfElseOperation extends ParentingOperation {
 	boolean isTrue;
@@ -13,21 +10,32 @@ public class IfElseOperation extends ParentingOperation {
 		return IfElseExecutor.class;
 	}
 
-	@Override
-	protected boolean isComplete() {
-		return super.isComplete();
+	public void configure(boolean b, Operation ifTrue) {
+		isTrue = b;
+		addChild(ifTrue);
 	}
 
-	public void configure(boolean b, Operation ifTrue, Operation ifFalse) {
-		isTrue = b;
+	public Operation elseDo(Operation ifFalse) {
+		if (operations.size > 1) {
+			throw new OperationException("Can't add more than one else operation");
+		}
+
 		addChild(ifFalse);
-		addChild(ifTrue);
+		return this;
+	}
+
+	@Override
+	protected OperationTree toNode() {
+		if (operations.size == 1)
+			addChild(null);
+
+		return super.toNode();
 	}
 
 	public static class IfElseExecutor extends ParentingExecutor<IfElseOperation> {
 		@Override
 		protected float act(float delta, IfElseOperation op, OperationTree node) {
-			OperationTree child = node.children().get(op.isTrue ? 1 : 0);
+			OperationTree child = node.children().get(op.isTrue ? 0 : 1);
 			return child != null ? child.act(delta) : delta;
 		}
 	}

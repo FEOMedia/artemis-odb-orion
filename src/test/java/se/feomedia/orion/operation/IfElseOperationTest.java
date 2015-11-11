@@ -17,7 +17,7 @@ public class IfElseOperationTest {
 		MySingleUseOperation trueOp = operation(MySingleUseOperation.class);
 		MySingleUseOperation falseOp = operation(MySingleUseOperation.class);
 
-		ifElse(true, trueOp, falseOp).register(world, world.create());
+		ifTrue(true, trueOp).elseDo(falseOp).register(world, world.create());
 
 		world.delta = 1f;
 		world.process();
@@ -34,7 +34,7 @@ public class IfElseOperationTest {
 		MySingleUseOperation trueOp = operation(MySingleUseOperation.class);
 		MySingleUseOperation falseOp = operation(MySingleUseOperation.class);
 
-		ifElse(false, trueOp, falseOp).register(world, world.create());
+		ifTrue(false, trueOp).elseDo(falseOp).register(world, world.create());
 
 		world.delta = 1f;
 		world.process();
