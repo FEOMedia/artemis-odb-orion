@@ -88,19 +88,27 @@ public class OperationSystem extends IteratingSystem {
 		clear(entityId);
 	}
 
+	public void clear() {
+		clear(voidEntityOperations.operations);
+	}
+
 	public void clear(int entityId) {
 		if (!operativeMapper.has(entityId))
 			return;
 
 		Array<OperationTree> operations = operativeMapper.get(entityId).operations;
+		clear(operations);
+
+		if (world.getEntityManager().isActive(entityId))
+			operativeMapper.remove(entityId);
+	}
+
+	private static void clear(Array<OperationTree> operations) {
 		for (int i = 0; i < operations.size; i++) {
 			operations.get(i).clear();
 		}
 
 		operations.clear();
-
-		if (world.getEntityManager().isActive(entityId))
-			operativeMapper.remove(entityId);
 	}
 
 	public static final class Friend {
