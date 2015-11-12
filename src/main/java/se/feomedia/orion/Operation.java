@@ -24,4 +24,8 @@ public abstract class Operation implements Pool.Poolable {
 	public final void register(Entity e) {
 		register(e.getWorld(), e.getId());
 	}
+
+	public final void register(World world) {
+		world.getSystem(OperationSystem.class).register(toNode());
+	}
 }

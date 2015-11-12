@@ -15,8 +15,9 @@ public class OperationSystem extends IteratingSystem {
 	private ComponentMapper<Operative> operativeMapper;
 
 	private ObjectMap<Class<? extends Executor>, Executor> executors = new ObjectMap<>();
-
 	private final Friend friend = new Friend();
+
+	private Operative voidEntityOperations = new Operative();
 
 	public OperationSystem() {
 		super(all(Operative.class));
@@ -24,19 +25,12 @@ public class OperationSystem extends IteratingSystem {
 
 	public void register(int entityId, OperationTree operation) {
 		operation.initialize(world, entityId, friend);
-		try {
-			operativeMapper.create(entityId).operations.add(operation);
-		} catch (NullPointerException e) {
-			if (operativeMapper == null)
-				throw new RuntimeException("operativeMapper was null");
+		operativeMapper.create(entityId).operations.add(operation);
+	}
 
-			String active = world.getEntityManager().isActive(entityId) ? "active: " : "killed: ";
-			String s = active + entityId +
-				": " +
-				operativeMapper +
-				"=" + operativeMapper.get(entityId);
-			throw new NullPointerException(s);
-		}
+	public void register(OperationTree operation) {
+		operation.initialize(world, -1, friend);
+		voidEntityOperations.operations.add(operation);
 	}
 
 	public Executor getExecutor(Operation operation, OperationTree.Friend friend) {
@@ -67,6 +61,13 @@ public class OperationSystem extends IteratingSystem {
 	@Override
 	protected void process(int e) {
 		Array<OperationTree> operations = operativeMapper.get(e).operations;
+		process(operations);
+
+		if (operations.size == 0) world.edit(e).remove(Operative.class);
+//			operativeMapper.remove(e); // artemis bug, cancels entity deletion
+	}
+
+	private void process(Array<OperationTree> operations) {
 		for (int i = 0; operations.size > i; i++) {
 			OperationTree ot = operations.get(i);
 			ot.act(world.delta);
@@ -75,9 +76,16 @@ public class OperationSystem extends IteratingSystem {
 				node.clear();
 			}
 		}
+	}
 
-		if (operations.size == 0) world.edit(e).remove(Operative.class);
-//			operativeMapper.remove(e); // artemis bug, cancels entity deletion
+	@Override
+	protected void end() {
+		process(voidEntityOperations.operations);
+	}
+
+	@Override
+	protected void removed(int entityId) {
+		clear(entityId);
 	}
 
 	public void clear(int entityId) {
@@ -90,8 +98,9 @@ public class OperationSystem extends IteratingSystem {
 		}
 
 		operations.clear();
-		
-		operativeMapper.remove(entityId);
+
+		if (world.getEntityManager().isActive(entityId))
+			operativeMapper.remove(entityId);
 	}
 
 	public static final class Friend {
