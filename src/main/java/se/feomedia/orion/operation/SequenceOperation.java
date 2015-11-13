@@ -26,6 +26,9 @@ public class SequenceOperation extends ParentingOperation {
 					break;
 			}
 
+//			if (delta > 0)
+//				op.completed = true;
+
 			return end(delta, op);
 		}
 	}

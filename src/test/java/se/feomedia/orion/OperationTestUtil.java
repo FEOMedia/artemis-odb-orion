@@ -10,8 +10,6 @@ public final class OperationTestUtil {
 	private OperationTestUtil() {}
 
 	public static IntBag operatives(World world) {
-//		world.getSystem(OperationSystem.class)
-
 		return world.getAspectSubscriptionManager()
 			.get(all(Operative.class))
 			.getEntities();

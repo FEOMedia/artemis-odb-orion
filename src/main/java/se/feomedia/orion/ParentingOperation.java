@@ -4,7 +4,7 @@ import com.artemis.annotations.Wire;
 import com.badlogic.gdx.utils.Array;
 import se.feomedia.orion.operation.NullOperation;
 
-import static java.lang.Math.min;
+import static java.lang.Math.max;
 import static se.feomedia.orion.OperationFactory.operation;
 
 public abstract class ParentingOperation extends Operation {
@@ -45,7 +45,7 @@ public abstract class ParentingOperation extends Operation {
 	public abstract static class ParentingExecutor<T extends ParentingOperation> extends Executor<T> {
 		protected final float end(float delta, ParentingOperation op) {
 			op.completed = op.completed || delta > 0;
-			return min(0f, delta);
+			return max(0f, delta);
 		}
 	}
 }

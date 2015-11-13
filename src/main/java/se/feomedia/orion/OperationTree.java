@@ -10,7 +10,7 @@ public class OperationTree {
 	private final Array<OperationTree> children;
 
 	private OperationTree parent;
-	private Operation operation;
+	Operation operation;
 	private transient Executor<?> executor;
 
 	private static final Friend friend = new Friend();
@@ -49,12 +49,22 @@ public class OperationTree {
 	@Override
 	public String toString() {
 		StringBuilder indent = new StringBuilder();
-		OperationTree t = this;
-		while ((t = t.parent) != null) {
-			indent.append("   ");
+		OperationTree ot = parent;
+		while (ot != null) {
+			if (indent.length() == 0) indent.append("\n");
+			indent.append("    ");
+			ot = ot.parent;
 		}
 
-		return String.format("value=%s (%s)", executor, children);
+		StringBuilder children = new StringBuilder();
+		if (this.children.size > 0) {
+			for (OperationTree child : this.children) {
+				children.append(child.toString());
+			}
+		}
+
+		return String.format("%s%s%s",
+			indent, operation.getClass().getSimpleName(), children);
 	}
 
 	public Array<OperationTree> children() {
@@ -62,10 +72,11 @@ public class OperationTree {
 	}
 
 	public void initialize(World world, int entityId, OperationSystem.Friend friend) {
+		friend.hashCode();
 		initialize(world.getSystem(OperationSystem.class), entityId);
 	}
 
-	private void initialize(OperationSystem operations, int entityId) {
+	void initialize(OperationSystem operations, int entityId) {
 		executor = operations.getExecutor(operation, friend);
 
 		operation.entityId = entityId;

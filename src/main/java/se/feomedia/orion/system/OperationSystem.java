@@ -4,6 +4,7 @@ import com.artemis.*;
 import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.esotericsoftware.kryo.Kryo;
 import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
 import se.feomedia.orion.OperationTree;
@@ -18,9 +19,19 @@ public class OperationSystem extends IteratingSystem {
 	private final Friend friend = new Friend();
 
 	private Operative voidEntityOperations = new Operative();
+	public Kryo kryo;
 
 	public OperationSystem() {
 		super(all(Operative.class));
+	}
+
+	@Override
+	protected void initialize() {
+		kryo = new Kryo();
+	}
+
+	public <T extends Operation> T copy(T operation) {
+		return kryo.copy(operation);
 	}
 
 	public void register(int entityId, OperationTree operation) {
@@ -34,6 +45,8 @@ public class OperationSystem extends IteratingSystem {
 	}
 
 	public Executor getExecutor(Operation operation, OperationTree.Friend friend) {
+		friend.hashCode();
+
 		Executor executor = executors.get(operation.executorType());
 		if (executor == null) {
 			executor = createExecutor(operation);
