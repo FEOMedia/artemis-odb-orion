@@ -5,8 +5,6 @@ import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.Kryo;
-import org.objenesis.instantiator.ObjectInstantiator;
-import org.objenesis.strategy.BaseInstantiatorStrategy;
 import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
 import se.feomedia.orion.OperationTree;
@@ -84,9 +82,7 @@ public class OperationSystem extends IteratingSystem {
 			executor.initialize(world);
 
 			return executor;
-		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
 	}

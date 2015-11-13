@@ -1,19 +1,26 @@
 package se.feomedia.orion.operation;
 
-import com.artemis.World;
 import com.badlogic.gdx.math.Interpolation;
 import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
+import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static se.feomedia.orion.OperationFactory.seconds;
 
+/**
+ * Base type of operations with a notion of duration.
+ */
 public abstract class TemporalOperation extends Operation {
 	public float acc;
 	public float duration;
 	public Interpolation interpolation = Interpolation.linear;
+
+	public TemporalOperation(OperationFactory.Friend friend) {
+		super(friend);
+	}
 
 	public void duration(float duration) {
 		this.duration = duration;

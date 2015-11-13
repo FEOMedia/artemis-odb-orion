@@ -9,6 +9,10 @@ public class RepeatOperation extends ParentingOperation {
 
 	Operation repeated;
 
+	public RepeatOperation(OperationFactory.Friend friend) {
+		super(friend);
+	}
+
 	@Override
 	public Class<? extends Executor> executorType() {
 		return RepeatExecutor.class;
@@ -39,7 +43,8 @@ public class RepeatOperation extends ParentingOperation {
 		protected void begin(RepeatOperation op, OperationTree node) {
 			super.begin(op, node);
 			if (op.repeated == null) {
-				op.repeated = operations.copy(node.children().get(0).operation);
+				OperationTree childNode = node.children().get(0);
+				op.repeated = operations.copy(childNode.operation);
 			}
 		}
 
@@ -50,23 +55,24 @@ public class RepeatOperation extends ParentingOperation {
 			while (op.acc < op.total && delta > 0) {
 				delta = child.act(delta);
 				if (child.isComplete()) {
-					child = replaceChild(op, node);
+					op.acc++;
+					child = replaceChild(node);
 				}
 			}
 
 			return delta;
 		}
 
-		private OperationTree replaceChild(RepeatOperation op, OperationTree node) {
-			OperationTree oldChild = node.children().first();
+		private OperationTree replaceChild(OperationTree node) {
+			RepeatOperation op = (RepeatOperation) node.operation;
 
-			op.acc++;
-			node.children().removeIndex(0);
+			OperationTree oldChild = node.children().pop();
 
 			Operation copy = operations.copy(op.repeated);
 			node.add(copy.toNode());
 			node.initialize(operations, op.entityId);
 
+			// reclaiming objects
 			oldChild.clear();
 			return node.children().first();
 		}

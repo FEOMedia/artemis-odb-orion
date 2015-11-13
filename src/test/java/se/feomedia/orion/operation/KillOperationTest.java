@@ -69,6 +69,10 @@ public class KillOperationTest {
 
 	public static class ThrowExceptionOperation extends SingleUseOperation {
 
+		public ThrowExceptionOperation(Friend friend) {
+			super(friend);
+		}
+
 		@Override
 		public Class<? extends Executor> executorType() {
 			return ThrowExceptionExecutor.class;

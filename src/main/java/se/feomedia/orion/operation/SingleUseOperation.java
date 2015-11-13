@@ -3,11 +3,16 @@ package se.feomedia.orion.operation;
 import com.artemis.annotations.Wire;
 import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
+import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 
 public abstract class SingleUseOperation extends Operation {
 	boolean hasRun;
 	boolean consumeDelta;
+
+	public SingleUseOperation(OperationFactory.Friend friend) {
+		super(friend);
+	}
 
 	@Override
 	protected boolean isComplete() {

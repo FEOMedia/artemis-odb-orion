@@ -3,7 +3,6 @@ package se.feomedia.orion;
 import com.artemis.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pools;
 import se.feomedia.orion.system.OperationSystem;
 
 public class OperationTree {
@@ -30,7 +29,7 @@ public class OperationTree {
 	}
 
 	private OperationTree() {
-		children = new Array<>(OperationTree.class);
+		children = new Array<>(true, 8, OperationTree.class);
 	}
 
 	public float act(float delta) {
@@ -93,7 +92,7 @@ public class OperationTree {
 	}
 
 	private void clear(OperationTree ot) {
-		Pools.free(ot.operation);
+		OperationFactory.free(ot.operation);
 		ot.operation = null;
 		ot.parent = null;
 		ot.executor = null;

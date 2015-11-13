@@ -3,13 +3,21 @@ package se.feomedia.orion.operation;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.utils.Array;
 import se.feomedia.orion.Executor;
+import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 import se.feomedia.orion.ParentingOperation;
 
 import static java.lang.Math.min;
 
-
+/**
+ * Processes operations simultaneously. This operation will not
+ * report completed until all operations have run their course completed.
+ */
 public class ParallelOperation extends ParentingOperation {
+
+	public ParallelOperation(OperationFactory.Friend friend) {
+		super(friend);
+	}
 
 	@Override
 	public Class<? extends Executor> executorType() {

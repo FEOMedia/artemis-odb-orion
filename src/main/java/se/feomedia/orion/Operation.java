@@ -5,10 +5,20 @@ import com.artemis.World;
 import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.system.OperationSystem;
 
+/**
+ * <p>Operations are analogue to components. They should only carry
+ * pure data, as transient state and logic is handled by
+ * {@link Executor|Executors}.</p>
+ *
+ * @see OperationFactory#operation(Class)
+ */
 public abstract class Operation implements Pool.Poolable {
 	public transient int entityId = -1;
-
 	protected boolean started;
+
+	public Operation(OperationFactory.Friend friend) {
+		friend.hashCode();
+	}
 
 	public abstract Class<? extends Executor> executorType();
 	protected abstract boolean isComplete();
@@ -18,7 +28,16 @@ public abstract class Operation implements Pool.Poolable {
 	}
 
 	public final void register(World world, int entityId) {
-		world.getSystem(OperationSystem.class).register(entityId, toNode());
+		OperationSystem os = world.getSystem(OperationSystem.class);
+		if (os == null) {
+			String name = OperationSystem.class.getSimpleName();
+			String error = "Failed to register operation as " + name
+				+ " isn't registered with the World instance.";
+
+			throw new RuntimeException(error);
+		}
+
+		os.register(entityId, toNode());
 	}
 
 	public final void register(Entity e) {

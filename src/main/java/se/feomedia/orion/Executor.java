@@ -3,6 +3,17 @@ package se.feomedia.orion;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
 
+/**
+ * <p>Executors act on operations. They are similar to entity systems -
+ * logic building blocks for acting on operation data - and typically
+ * reference the same ECS assets; component mappers and other systems.</p>
+ *
+ * <p>Executor lifecycle is managed by the {@link World}. There will
+ * never be more than one Executor per type and world. If <code>@Wire</code>
+ * is present, the executor is subject to normal dependency injection.</p>
+ *
+ * @param <T> Operation type.
+ */
 @Wire
 public abstract class Executor<T extends Operation> {
 	public Operation parent;
@@ -10,13 +21,18 @@ public abstract class Executor<T extends Operation> {
 	public void initialize(World world) {}
 
 	/**
-	 * Runs every tick.
+	 * Updates the operation.
+	 *
+	 * @param delta since last frame
+	 * @param operation the operation
+	 * @param node node hosting this operation
+	 * @return new delta, may be same if operation was instant.
 	 */
 	protected abstract float act(float delta, T operation, OperationTree node);
 
 	protected void begin(T operation, OperationTree node) {}
 
-	public float process(float delta, Operation operation, OperationTree node) {
+	protected final float process(float delta, Operation operation, OperationTree node) {
 		if (operation.isComplete())
 			return delta;
 

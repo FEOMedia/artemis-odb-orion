@@ -2,10 +2,15 @@ package se.feomedia.orion.operation;
 
 import junit.framework.TestCase;
 import se.feomedia.orion.Executor;
+import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 
 public class MySingleUseOperation extends SingleUseOperation {
 	int timesRun;
+
+	public MySingleUseOperation(OperationFactory.Friend friend) {
+		super(friend);
+	}
 
 	@Override
 	public void reset() {

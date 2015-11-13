@@ -187,6 +187,10 @@ public class OperationTest extends TestCase {
 	public static class ManagerOperation extends Operation {
 		private boolean completed;
 
+		public ManagerOperation(Friend friend) {
+			super(friend);
+		}
+
 		@Override
 		public Class<? extends Executor> executorType() {
 			return ManagerExecutor.class;

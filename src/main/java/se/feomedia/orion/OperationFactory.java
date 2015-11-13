@@ -2,8 +2,12 @@ package se.feomedia.orion;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pools;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.operation.*;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import static com.badlogic.gdx.math.MathUtils.random;
 import static com.badlogic.gdx.utils.NumberUtils.floatToRawIntBits;
@@ -12,6 +16,10 @@ import static com.badlogic.gdx.utils.NumberUtils.intBitsToFloat;
 public final class OperationFactory {
 
 	private static final Vector2 xy = new Vector2();
+	private static final Friend friend = new Friend();
+
+	private static final ObjectMap<Class<? extends Operation>, Pool<?>> pools
+			= new ObjectMap<>();
 
 	private OperationFactory() {}
 
@@ -149,10 +157,24 @@ public final class OperationFactory {
 		return ifElse(!b, ifFalse);
 	}
 
-	public static <T extends Operation> T operation(Class<T> actionType) {
-		T action = Pools.obtain(actionType);
-		return action;
+	public static <T extends Operation> T operation(final Class<T> operationType) {
+		return pool(operationType).obtain();
 	}
+
+	static <T extends Operation> void free(Operation op) {
+		((Pool) pool(op.getClass())).free(op);
+	}
+
+	private static <T extends Operation> Pool<T> pool(Class<T> operationType) {
+		Pool<T> pool = (Pool<T>) pools.get(operationType);
+		if (pool == null) {
+			pool = new OperationPool<>(operationType);
+			pools.put(operationType, pool);
+		}
+
+		return pool;
+	}
+
 
 	public static float seconds(float value) {
 		if (value == 0) {
@@ -182,5 +204,37 @@ public final class OperationFactory {
 		op.duration = duration;
 		op.interpolation = interpolation;
 		return op;
+	}
+
+	public static final class Friend {
+		private Friend() {}
+	}
+
+	static class OperationPool<T extends Operation> extends Pool<T> {
+		private final Constructor<T> ctor;
+
+		public OperationPool(Class<T> operationType) {
+			ctor = constructor(operationType);
+		}
+
+		@Override
+		protected T newObject() {
+			try {
+				return ctor.newInstance(friend);
+			} catch (InstantiationException
+					| InvocationTargetException
+					| IllegalAccessException e) {
+
+				throw new RuntimeException(e);
+			}
+		}
+
+		private Constructor<T> constructor(final Class<T> op) {
+			try {
+				return op.getDeclaredConstructor(Friend.class);
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 }

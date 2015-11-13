@@ -7,10 +7,22 @@ import se.feomedia.orion.operation.NullOperation;
 import static java.lang.Math.max;
 import static se.feomedia.orion.OperationFactory.operation;
 
+/**
+ * Operation type hosting other operations.
+ *
+ * @see se.feomedia.orion.operation.ParallelOperation
+ * @see se.feomedia.orion.operation.SequenceOperation
+ * @see RepeatOperation
+ *
+ */
 public abstract class ParentingOperation extends Operation {
 	public boolean completed;
 
 	protected Array<Operation> operations = new Array<>();
+
+	public ParentingOperation(OperationFactory.Friend friend) {
+		super(friend);
+	}
 
 	@Override
 	protected boolean isComplete() {

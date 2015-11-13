@@ -5,6 +5,7 @@ import com.artemis.WorldConfiguration;
 import com.artemis.annotations.Wire;
 import org.junit.Test;
 import se.feomedia.orion.Executor;
+import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 import se.feomedia.orion.system.OperationSystem;
 
@@ -87,6 +88,10 @@ public class VoidEntityOperationTest {
 
 	public static class HiThereOperation extends SingleUseOperation {
 		public String s;
+
+		public HiThereOperation(OperationFactory.Friend friend) {
+			super(friend);
+		}
 
 		@Override
 		public Class<? extends Executor> executorType() {

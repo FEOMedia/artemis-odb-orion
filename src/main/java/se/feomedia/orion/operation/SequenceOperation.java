@@ -3,11 +3,20 @@ package se.feomedia.orion.operation;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.utils.Array;
 import se.feomedia.orion.Executor;
+import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 import se.feomedia.orion.ParentingOperation;
 
 
+/**
+ * Processes all operations sequentially, until the last operation
+ * reports completed.
+ */
 public class SequenceOperation extends ParentingOperation {
+
+	public SequenceOperation(OperationFactory.Friend friend) {
+		super(friend);
+	}
 
 	@Override
 	public Class<? extends Executor> executorType() {
@@ -25,9 +34,6 @@ public class SequenceOperation extends ParentingOperation {
 				if (delta <= 0)
 					break;
 			}
-
-//			if (delta > 0)
-//				op.completed = true;
 
 			return end(delta, op);
 		}

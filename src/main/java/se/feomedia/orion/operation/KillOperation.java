@@ -3,9 +3,17 @@ package se.feomedia.orion.operation;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
 import se.feomedia.orion.Executor;
+import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 
+/**
+ * Kills the owning entity.
+ */
 public class KillOperation extends SingleUseOperation {
+
+	public KillOperation(OperationFactory.Friend friend) {
+		super(friend);
+	}
 
 	@Override
 	public Class<? extends Executor> executorType() {
