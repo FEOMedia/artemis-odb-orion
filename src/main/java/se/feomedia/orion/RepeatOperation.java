@@ -50,20 +50,25 @@ public class RepeatOperation extends ParentingOperation {
 			while (op.acc < op.total && delta > 0) {
 				delta = child.act(delta);
 				if (child.isComplete()) {
-					op.acc++;
-					node.children().removeIndex(0);
-
-					Operation copy = operations.copy(op.repeated);
-
-					node.add(copy.toNode());
-					node.initialize(operations, op.entityId);
-
-					child.clear();
-					child = node.children().first();
+					child = replaceChild(op, node);
 				}
 			}
 
 			return delta;
+		}
+
+		private OperationTree replaceChild(RepeatOperation op, OperationTree node) {
+			OperationTree oldChild = node.children().first();
+
+			op.acc++;
+			node.children().removeIndex(0);
+
+			Operation copy = operations.copy(op.repeated);
+			node.add(copy.toNode());
+			node.initialize(operations, op.entityId);
+
+			oldChild.clear();
+			return node.children().first();
 		}
 	}
 }
