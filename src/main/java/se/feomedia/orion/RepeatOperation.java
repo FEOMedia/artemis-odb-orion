@@ -63,7 +63,7 @@ public class RepeatOperation extends ParentingOperation {
 					node.initialize(operations, op.entityId);
 
 					System.out.println("## copy");
-					System.out.println(node.children().first());
+					System.out.println(node);
 					System.out.println();
 
 					child.clear();

@@ -63,8 +63,10 @@ public class OperationTree {
 			}
 		}
 
-		return String.format("%s%s%s",
-			indent, operation.getClass().getSimpleName(), children);
+		return String.format(indent + "%s:%s%s",
+			operation.getClass().getSimpleName(),
+			executor.getClass().getSimpleName(),
+			children);
 	}
 
 	public Array<OperationTree> children() {

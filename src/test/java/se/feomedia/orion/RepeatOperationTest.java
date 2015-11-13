@@ -4,8 +4,6 @@ import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.annotations.Wire;
 import org.junit.Test;
-import se.feomedia.orion.Executor;
-import se.feomedia.orion.OperationTree;
 import se.feomedia.orion.operation.SingleUseOperation;
 import se.feomedia.orion.system.OperationSystem;
 
@@ -27,27 +25,22 @@ public class RepeatOperationTest  {
 			sequence(
 				operation(SingleFrameOperation.class)
 			)
-		).register(world, world.create());
+		).register(world);
 
-//		assertEquals(0, SingleFrameOperation.invocations);
 		assertEquals(0, counter[0]);
 
 
 		process(world);
 		assertEquals(1, counter[0]);
-//		assertEquals(1, SingleFrameOperation.invocations);
 
 		process(world);
 		assertEquals(2, counter[0]);
-//		assertEquals(2, SingleFrameOperation.invocations);
 
 		process(world);
 		assertEquals(3, counter[0]);
-//		assertEquals(3, SingleFrameOperation.invocations);
 
 		process(world);
-		assertEquals(4, counter[0]);
-//		assertEquals(3, SingleFrameOperation.invocations);
+		assertEquals(3, counter[0]);
 	}
 
 	@Test
@@ -71,7 +64,6 @@ public class RepeatOperationTest  {
 	}
 
 	public static class SingleFrameOperation extends SingleUseOperation {
-//		public static int invocations;
 		public int counter = 1;
 
 		@Override
@@ -99,10 +91,9 @@ public class RepeatOperationTest  {
 			protected float act(float delta, SingleFrameOperation op, OperationTree node) {
 				System.out.println("invoking");
 
-//				invocations++;
 				counter[0]++;
 				op.counter++;
-//				assertEquals(2, op.counter);
+				assertEquals(2, op.counter);
 				return 0;
 			}
 		}
