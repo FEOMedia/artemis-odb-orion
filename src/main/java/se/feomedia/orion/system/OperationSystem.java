@@ -5,10 +5,15 @@ import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.Kryo;
+import org.objenesis.instantiator.ObjectInstantiator;
+import org.objenesis.strategy.BaseInstantiatorStrategy;
 import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
 import se.feomedia.orion.OperationTree;
+import se.feomedia.orion.RepeatOperation;
 import se.feomedia.orion.component.Operative;
+import se.feomedia.orion.kryo.OperationInstantiator;
+import se.feomedia.orion.operation.*;
 
 import static com.artemis.Aspect.all;
 
@@ -28,6 +33,21 @@ public class OperationSystem extends IteratingSystem {
 	@Override
 	protected void initialize() {
 		kryo = new Kryo();
+		kryo.setInstantiatorStrategy(new OperationInstantiator());
+		kryo.register(DelayOperation.class);
+		kryo.register(DelayOperation.DelayExecutor.class);
+		kryo.register(DelayTickOperation.class);
+		kryo.register(DelayTickOperation.DelayTickExecutor.class);
+		kryo.register(IfElseOperation.class);
+		kryo.register(IfElseOperation.IfElseExecutor.class);
+		kryo.register(KillOperation.class);
+		kryo.register(KillOperation.KillExecutor.class);
+		kryo.register(ParallelOperation.class);
+		kryo.register(ParallelOperation.ParallelExecutor.class);
+		kryo.register(RepeatOperation.class);
+		kryo.register(RepeatOperation.RepeatExecutor.class);
+		kryo.register(SequenceOperation.class);
+		kryo.register(SequenceOperation.SequenceExecutor.class);
 	}
 
 	public <T extends Operation> T copy(T operation) {
@@ -77,7 +97,7 @@ public class OperationSystem extends IteratingSystem {
 		process(operations);
 
 		if (operations.size == 0) world.edit(e).remove(Operative.class);
-//			operativeMapper.remove(e); // artemis bug, cancels entity deletion
+//			operativeMapper.remove(e); // artemis <= 1.1.2 bug, cancels entity deletion
 	}
 
 	private void process(Array<OperationTree> operations) {

@@ -39,10 +39,6 @@ public class RepeatOperation extends ParentingOperation {
 		protected void begin(RepeatOperation op, OperationTree node) {
 			super.begin(op, node);
 			if (op.repeated == null) {
-				System.out.println("## in begin");
-				System.out.println(node);
-				System.out.println();
-
 				op.repeated = operations.copy(node.children().get(0).operation);
 			}
 		}
@@ -61,10 +57,6 @@ public class RepeatOperation extends ParentingOperation {
 
 					node.add(copy.toNode());
 					node.initialize(operations, op.entityId);
-
-					System.out.println("## copy");
-					System.out.println(node);
-					System.out.println();
 
 					child.clear();
 					child = node.children().first();
