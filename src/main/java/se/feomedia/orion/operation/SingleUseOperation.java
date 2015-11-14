@@ -3,7 +3,6 @@ package se.feomedia.orion.operation;
 import com.artemis.annotations.Wire;
 import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
-import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 
 public abstract class SingleUseOperation extends Operation {
@@ -18,7 +17,6 @@ public abstract class SingleUseOperation extends Operation {
 	public void reset() {
 		hasRun = false;
 	}
-
 
 	@Wire
 	public abstract static class SingleUseExecutor<T extends SingleUseOperation> extends Executor<T> {

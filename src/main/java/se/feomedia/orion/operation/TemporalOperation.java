@@ -3,7 +3,6 @@ package se.feomedia.orion.operation;
 import com.badlogic.gdx.math.Interpolation;
 import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
-import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 
 import static java.lang.Math.max;

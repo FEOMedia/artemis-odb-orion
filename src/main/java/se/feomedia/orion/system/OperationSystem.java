@@ -53,7 +53,6 @@ public class OperationSystem extends IteratingSystem {
 	}
 
 	public void register(int entityId, OperationTree operation) {
-		operation.initialize(world, entityId, friend);
 		operativeMapper.create(entityId).operations.add(operation);
 	}
 

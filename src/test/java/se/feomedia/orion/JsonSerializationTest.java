@@ -18,9 +18,7 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
 import static com.artemis.Aspect.all;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static se.feomedia.orion.OperationFactory.*;
 import static se.feomedia.orion.OperationTestUtil.process;
 

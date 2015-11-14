@@ -1,12 +1,8 @@
 package se.feomedia.orion;
 
-import com.artemis.EntitySubscription;
 import com.artemis.World;
-import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
 import se.feomedia.orion.component.Operative;
-
-import java.io.StringWriter;
 
 import static com.artemis.Aspect.all;
 

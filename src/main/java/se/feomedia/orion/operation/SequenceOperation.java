@@ -3,7 +3,6 @@ package se.feomedia.orion.operation;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.utils.Array;
 import se.feomedia.orion.Executor;
-import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 import se.feomedia.orion.ParentingOperation;
 

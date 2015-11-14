@@ -9,9 +9,7 @@ import se.feomedia.orion.system.OperationSystem;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static se.feomedia.orion.OperationFactory.delayTick;
-import static se.feomedia.orion.OperationFactory.operation;
-import static se.feomedia.orion.OperationFactory.sequence;
+import static se.feomedia.orion.OperationFactory.*;
 import static se.feomedia.orion.OperationTestUtil.operatives;
 import static se.feomedia.orion.OperationTestUtil.process;
 

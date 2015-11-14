@@ -2,7 +2,6 @@ package se.feomedia.orion.operation;
 
 import com.artemis.annotations.Wire;
 import se.feomedia.orion.Executor;
-import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 
 public class DelayOperation extends TemporalOperation {

@@ -2,7 +2,6 @@ package se.feomedia.orion.operation;
 
 import junit.framework.TestCase;
 import se.feomedia.orion.Executor;
-import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 
 public class MySingleUseOperation extends SingleUseOperation {

@@ -5,7 +5,7 @@ import com.artemis.WorldConfiguration;
 import org.junit.Test;
 import se.feomedia.orion.system.OperationSystem;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static se.feomedia.orion.OperationFactory.*;
 
 public class IfElseOperationTest {

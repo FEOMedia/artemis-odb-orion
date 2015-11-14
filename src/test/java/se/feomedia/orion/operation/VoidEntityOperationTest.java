@@ -5,14 +5,11 @@ import com.artemis.WorldConfiguration;
 import com.artemis.annotations.Wire;
 import org.junit.Test;
 import se.feomedia.orion.Executor;
-import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 import se.feomedia.orion.system.OperationSystem;
 
 import static org.junit.Assert.*;
-import static se.feomedia.orion.OperationFactory.delayTick;
-import static se.feomedia.orion.OperationFactory.operation;
-import static se.feomedia.orion.OperationFactory.sequence;
+import static se.feomedia.orion.OperationFactory.*;
 
 public class VoidEntityOperationTest {
 
@@ -28,61 +25,72 @@ public class VoidEntityOperationTest {
 		HiThereOperation eOp2 = operation(HiThereOperation.class).s("eOp2");
 
 		sequence(
+			// 1
 			delayTick(1),
+
+			// 2
 			op,
 			delayTick(1),
+
+			// 3
 			delayTick(1),
-			op2
+			op2,
+
+			// 4
+			delayTick(1)
 		).register(w);
 
 		int entity = w.create();
 		sequence(
+			// 1
 			delayTick(1),
+
+			// 2
 			eOp,
 			delayTick(1),
+
+			// 3
 			delayTick(1),
-			eOp2
+			eOp2,
+
+			// 4
+			delayTick(1)
 		).register(w, entity);
 
 		// 1
 		w.delta = .1f;
 		w.process();
 
-		assertFalse(op.isComplete());
-		assertFalse(op2.isComplete());
-		assertFalse(eOp.isComplete());
-		assertFalse(eOp2.isComplete());
+		assertEquals("hi", op.s);
+		assertEquals("hepp", op2.s);
+		assertEquals("eOp", eOp.s);
+		assertEquals("eOp2", eOp2.s);
 
 		// 2
 		w.delta = .1f;
 		w.process();
 
-		assertTrue(op.isComplete());
-		assertFalse(op2.isComplete());
-		assertTrue(eOp.isComplete());
-		assertFalse(eOp2.isComplete());
+		assertEquals(null, op.s);
+		assertEquals("hepp", op2.s);
+		assertEquals(null, eOp.s);
+		assertEquals("eOp2", eOp2.s);
 
 		// 3
 		w.delta = .1f;
 		w.delete(entity);
 		w.process();
 
-		assertTrue(op.isComplete());
-		assertFalse(op2.isComplete());
-		assertTrue(eOp.isComplete());
-		assertFalse(eOp2.isComplete());
+		assertEquals(null, op.s);
+		assertEquals("hepp", op2.s);
+		assertEquals(null, eOp.s);
+		assertEquals("eOp2", eOp2.s);
 
 		w.delta = .1f;
 		w.process(); // 4
 
-		assertTrue(op.isComplete());
-		assertTrue(op2.isComplete());
-		assertTrue(eOp.isComplete());
-		assertFalse(eOp2.isComplete());
-
-		assertEquals("hi!!!", op.s);
-		assertEquals("hepp!!!", op2.s);
-		assertEquals("eOp!!!", eOp.s);
+		assertEquals(null, op.s);
+		assertEquals(null, op2.s);
+		assertEquals(null, eOp.s);
 		assertEquals("eOp2", eOp2.s);
 	}
 
@@ -110,7 +118,6 @@ public class VoidEntityOperationTest {
 		public static class HiThereExecutor extends SingleUseExecutor<HiThereOperation> {
 			@Override
 			protected void act(HiThereOperation op, OperationTree node) {
-				op.s += "!!!";
 			}
 		}
 	}

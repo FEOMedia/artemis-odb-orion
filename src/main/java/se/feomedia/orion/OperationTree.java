@@ -101,11 +101,13 @@ public class OperationTree {
 		ot.operation = null;
 		ot.parent = null;
 		ot.executor = null;
+
 		for (OperationTree node : ot.children) {
 			clear(node);
 		}
+		ot.children.clear();
 
-		children.clear();
+		pool.free(ot);
 	}
 
 	public static final class Friend {
