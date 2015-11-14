@@ -9,10 +9,6 @@ import se.feomedia.orion.OperationTree;
 public abstract class SingleUseOperation extends Operation {
 	boolean hasRun;
 
-	public SingleUseOperation(OperationFactory.Friend friend) {
-		super(friend);
-	}
-
 	@Override
 	protected boolean isComplete() {
 		return hasRun;

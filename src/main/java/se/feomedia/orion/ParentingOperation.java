@@ -18,11 +18,7 @@ import static se.feomedia.orion.OperationFactory.operation;
 public abstract class ParentingOperation extends Operation {
 	public boolean completed;
 
-	protected Array<Operation> operations = new Array<>();
-
-	public ParentingOperation(OperationFactory.Friend friend) {
-		super(friend);
-	}
+	protected Array<Operation> operations = new Array<>(true, 8);
 
 	@Override
 	protected boolean isComplete() {

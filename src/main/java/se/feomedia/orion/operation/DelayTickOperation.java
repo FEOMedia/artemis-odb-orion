@@ -9,10 +9,6 @@ public class DelayTickOperation extends Operation {
 	public int ticksToWait;
 	int acc;
 
-	public DelayTickOperation(OperationFactory.Friend friend) {
-		super(friend);
-	}
-
 	@Override
 	public Class<? extends Executor> executorType() {
 		return DelayTickExecutor.class;

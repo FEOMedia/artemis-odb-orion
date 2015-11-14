@@ -9,10 +9,6 @@ public class RepeatOperation extends ParentingOperation {
 
 	Operation repeated;
 
-	public RepeatOperation(OperationFactory.Friend friend) {
-		super(friend);
-	}
-
 	@Override
 	public Class<? extends Executor> executorType() {
 		return RepeatExecutor.class;

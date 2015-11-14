@@ -5,10 +5,6 @@ import se.feomedia.orion.*;
 public class IfElseOperation extends ParentingOperation {
 	boolean isTrue;
 
-	public IfElseOperation(OperationFactory.Friend friend) {
-		super(friend);
-	}
-
 	@Override
 	public Class<? extends Executor> executorType() {
 		return IfElseExecutor.class;

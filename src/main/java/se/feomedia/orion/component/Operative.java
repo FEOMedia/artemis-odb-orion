@@ -5,13 +5,12 @@ import com.badlogic.gdx.utils.Array;
 import se.feomedia.orion.OperationTree;
 
 public class Operative extends PooledComponent {
-	public Array<OperationTree> operations = new Array<>(true, 8, OperationTree.class);
+	public Array<OperationTree> operations = new Array<>(true, 8);
 
 	@Override
 	protected void reset() {
-		OperationTree[] ops = operations.items;
 		for (int i = 0, s = operations.size; s > i ; i++) {
-			ops[i].clear();
+			operations.get(i).clear();
 		}
 
 		operations.clear();

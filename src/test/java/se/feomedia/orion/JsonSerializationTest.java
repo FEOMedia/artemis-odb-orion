@@ -63,7 +63,6 @@ public class JsonSerializationTest {
 		String saveE1 = save(world, all(Operative.class));
 
 		process(world);
-		process(world);
 
 		assertNotNull(string[0]);
 		assertEquals(1, entity[0]);
@@ -76,7 +75,10 @@ public class JsonSerializationTest {
 		assertEquals(1, load.entities.size());
 		assertNotEquals(e1, e2);
 
-		world.process();
+		// making sure values haven't changed due to loading
+		assertNotNull(string[0]);
+		assertEquals(1, entity[0]);
+
 		world.process();
 
 		assertNotNull(string[0]);
@@ -98,10 +100,6 @@ public class JsonSerializationTest {
 	}
 
 	public static class EntityWriterOperation extends SingleUseOperation {
-		public EntityWriterOperation(OperationFactory.Friend friend) {
-			super(friend);
-		}
-
 		@Override
 		public Class<? extends Executor> executorType() {
 			return EntityWriterExecutor.class;

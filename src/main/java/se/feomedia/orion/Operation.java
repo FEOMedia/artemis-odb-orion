@@ -16,10 +16,6 @@ public abstract class Operation implements Pool.Poolable {
 	public transient int entityId = -1;
 	protected boolean started;
 
-	public Operation(OperationFactory.Friend friend) {
-		friend.hashCode();
-	}
-
 	public abstract Class<? extends Executor> executorType();
 	protected abstract boolean isComplete();
 

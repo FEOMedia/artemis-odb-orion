@@ -11,10 +11,6 @@ import se.feomedia.orion.OperationTree;
  */
 public class KillOperation extends SingleUseOperation {
 
-	public KillOperation(OperationFactory.Friend friend) {
-		super(friend);
-	}
-
 	@Override
 	public Class<? extends Executor> executorType() {
 		return KillExecutor.class;

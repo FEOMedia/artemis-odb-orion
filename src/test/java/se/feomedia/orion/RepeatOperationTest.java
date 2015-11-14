@@ -87,10 +87,6 @@ public class RepeatOperationTest  {
 	public static class SingleFrameOperation extends Operation {
 		public int counter = 1;
 
-		public SingleFrameOperation(Friend friend) {
-			super(friend);
-		}
-
 		@Override
 		public Class<? extends Executor> executorType() {
 			return SingleFrameExecutor.class;
@@ -123,9 +119,6 @@ public class RepeatOperationTest  {
 	}
 
 	public static class SelfTrackingOperation extends SingleUseOperation {
-		public SelfTrackingOperation(Friend friend) {
-			super(friend);
-		}
 
 		@Override
 		public Class<? extends Executor> executorType() {
@@ -150,9 +143,6 @@ public class RepeatOperationTest  {
 		public static int invocations;
 		private boolean complete;
 
-		public InstantOperation(Friend friend) {
-			super(friend);
-		}
 
 		@Override
 		public Class<? extends Executor> executorType() {

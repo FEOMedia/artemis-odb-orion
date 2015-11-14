@@ -6,9 +6,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.operation.*;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import static com.badlogic.gdx.math.MathUtils.random;
 import static com.badlogic.gdx.utils.NumberUtils.floatToRawIntBits;
 import static com.badlogic.gdx.utils.NumberUtils.intBitsToFloat;
@@ -200,7 +197,6 @@ public final class OperationFactory {
 	public static <T extends TemporalOperation> T configure(T op,
 	                                                        float duration,
 	                                                        Interpolation interpolation) {
-
 		op.duration = duration;
 		op.interpolation = interpolation;
 		return op;
@@ -211,28 +207,17 @@ public final class OperationFactory {
 	}
 
 	static class OperationPool<T extends Operation> extends Pool<T> {
-		private final Constructor<T> ctor;
+		private final Class<T> operationType;
 
 		public OperationPool(Class<T> operationType) {
-			ctor = constructor(operationType);
+			this.operationType = operationType;
 		}
 
 		@Override
 		protected T newObject() {
 			try {
-				return ctor.newInstance(friend);
-			} catch (InstantiationException
-					| InvocationTargetException
-					| IllegalAccessException e) {
-
-				throw new RuntimeException(e);
-			}
-		}
-
-		private Constructor<T> constructor(final Class<T> op) {
-			try {
-				return op.getDeclaredConstructor(Friend.class);
-			} catch (NoSuchMethodException e) {
+				return operationType.newInstance();
+			} catch (InstantiationException	| IllegalAccessException e) {
 				throw new RuntimeException(e);
 			}
 		}

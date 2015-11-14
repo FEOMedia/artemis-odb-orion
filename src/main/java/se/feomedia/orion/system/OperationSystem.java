@@ -57,6 +57,14 @@ public class OperationSystem extends IteratingSystem {
 		operativeMapper.create(entityId).operations.add(operation);
 	}
 
+	@Override
+	protected void inserted(int entityId) {
+		Array<OperationTree> operations = operativeMapper.get(entityId).operations;
+		for (int i = 0, s = operations.size; s > i; i++) {
+			operations.get(i).initialize(world, entityId, friend);
+		}
+	}
+
 	public void register(OperationTree operation) {
 		operation.initialize(world, -1, friend);
 		voidEntityOperations.operations.add(operation);

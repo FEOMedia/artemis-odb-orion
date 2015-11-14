@@ -18,10 +18,6 @@ public abstract class TemporalOperation extends Operation {
 	public float duration;
 	public Interpolation interpolation = Interpolation.linear;
 
-	public TemporalOperation(OperationFactory.Friend friend) {
-		super(friend);
-	}
-
 	public void duration(float duration) {
 		this.duration = duration;
 	}

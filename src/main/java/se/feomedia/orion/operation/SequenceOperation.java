@@ -14,10 +14,6 @@ import se.feomedia.orion.ParentingOperation;
  */
 public class SequenceOperation extends ParentingOperation {
 
-	public SequenceOperation(OperationFactory.Friend friend) {
-		super(friend);
-	}
-
 	@Override
 	public Class<? extends Executor> executorType() {
 		return SequenceExecutor.class;
@@ -28,9 +24,9 @@ public class SequenceOperation extends ParentingOperation {
 		@Override
 		protected float act(float delta, SequenceOperation op, OperationTree node) {
 			Array<OperationTree> children = node.children();
-			OperationTree[] nodes = children.items;
 			for (int i = 0, s = children.size; s > i; i++) {
-				delta = nodes[i].act(delta);
+				OperationTree ot = children.get(i);
+				delta = ot.act(delta);
 				if (delta <= 0)
 					break;
 			}

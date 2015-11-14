@@ -30,7 +30,7 @@ public class OperationTree {
 	}
 
 	private OperationTree() {
-		children = new Array<>(true, 8, OperationTree.class);
+		children = new Array<>(true, 8);
 	}
 
 	public OperationTree parent() {

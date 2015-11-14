@@ -6,9 +6,6 @@ import se.feomedia.orion.OperationFactory;
 import se.feomedia.orion.OperationTree;
 
 public class DelayOperation extends TemporalOperation {
-	public DelayOperation(OperationFactory.Friend friend) {
-		super(friend);
-	}
 
 	@Override
 	public Class<? extends Executor> executorType() {

@@ -89,9 +89,6 @@ public class VoidEntityOperationTest {
 	public static class HiThereOperation extends SingleUseOperation {
 		public String s;
 
-		public HiThereOperation(OperationFactory.Friend friend) {
-			super(friend);
-		}
 
 		@Override
 		public Class<? extends Executor> executorType() {
