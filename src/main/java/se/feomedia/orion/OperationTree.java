@@ -6,10 +6,11 @@ import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.system.OperationSystem;
 
 public class OperationTree {
-	private final Array<OperationTree> children;
 
-	private OperationTree parent;
 	Operation operation;
+
+	private transient final Array<OperationTree> children;
+	private transient OperationTree parent;
 	private transient Executor<?> executor;
 
 	private static final Friend friend = new Friend();
@@ -30,6 +31,10 @@ public class OperationTree {
 
 	private OperationTree() {
 		children = new Array<>(true, 8, OperationTree.class);
+	}
+
+	public OperationTree parent() {
+		return parent;
 	}
 
 	public float act(float delta) {

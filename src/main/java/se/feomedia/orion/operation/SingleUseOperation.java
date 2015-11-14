@@ -8,7 +8,6 @@ import se.feomedia.orion.OperationTree;
 
 public abstract class SingleUseOperation extends Operation {
 	boolean hasRun;
-	boolean consumeDelta;
 
 	public SingleUseOperation(OperationFactory.Friend friend) {
 		super(friend);
@@ -22,7 +21,6 @@ public abstract class SingleUseOperation extends Operation {
 	@Override
 	public void reset() {
 		hasRun = false;
-		consumeDelta = false;
 	}
 
 
