@@ -1,8 +1,8 @@
 ## artemis-odb-orion
 
-An Operations/Actions mini-DSL for artemis-odb entities, built on top of
-[libgdx](https://github.com/libgdx/libgdx). Inspired by similar Actions
-API:s, especially that of libgdx.
+An Operations/Actions mini-DSL for [artemis-odb](https://github.com/junkdog/artemis-odb)
+entities, built on top of [libgdx](https://github.com/libgdx/libgdx). Inspired by similar
+Actions API:s, especially that of libgdx.
 
 Provides a core collection of operations, and a simple-to-use framework for building
 custom, project-specific operations.

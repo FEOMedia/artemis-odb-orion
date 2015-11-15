@@ -105,7 +105,7 @@ public class OperationSystem extends IteratingSystem {
 	@Override
 	protected void process(int e) {
 		Array<OperationTree> operations = operativeMapper.get(e).operations;
-			process(operations);
+		process(operations);
 
 		if (operations.size == 0) world.edit(e).remove(Operative.class);
 //			operativeMapper.remove(e); // artemis <= 1.1.2 bug, cancels entity deletion
