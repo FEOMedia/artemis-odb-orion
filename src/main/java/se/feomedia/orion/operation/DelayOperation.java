@@ -14,8 +14,7 @@ public class DelayOperation extends TemporalOperation {
 	@Wire
 	public static class DelayExecutor extends TemporalOperation.TemporalExecutor<DelayOperation> {
 		@Override
-		protected float act(float delta, float percent, DelayOperation op, OperationTree node) {
-			return op.acc - op.duration;
+		protected void act(float delta, float percent, DelayOperation op, OperationTree node) {
 		}
 	}
 }
