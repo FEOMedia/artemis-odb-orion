@@ -1,11 +1,14 @@
-package se.feomedia.orion;
+package se.feomedia.orion.io;
 
 import com.artemis.World;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import se.feomedia.orion.Operation;
+import se.feomedia.orion.OperationTree;
 
 public class OperationTreeSerializer implements Json.Serializer<OperationTree> {
 	private final World world;
+	private final Friend friend = new Friend();
 
 	public OperationTreeSerializer(World world) {
 		this.world = world;
@@ -25,9 +28,13 @@ public class OperationTreeSerializer implements Json.Serializer<OperationTree> {
 				(Class<Operation>) Class.forName(jsonData.child.child.asString());
 			Operation op = json.readValue(opType, jsonData.child);
 
-			return op.toNode();
+			return op.toNode(friend);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static final class Friend {
+		private Friend() {}
 	}
 }

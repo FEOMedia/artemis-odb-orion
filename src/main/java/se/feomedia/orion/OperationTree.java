@@ -61,16 +61,17 @@ public class OperationTree {
 		}
 
 		StringBuilder children = new StringBuilder();
-		if (this.children.size > 0) {
-			for (OperationTree child : this.children) {
-				children.append(child.toString());
-			}
+		for (OperationTree child : this.children) {
+			children.append(child.toString());
 		}
 
-		return String.format(indent + "%s:%s%s",
-			operation.getClass().getSimpleName(),
-			executor.getClass().getSimpleName(),
-			children);
+		String op = (operation != null)
+			? operation.getClass().getSimpleName()
+			: "<operation:null>";
+		String ex = (executor != null)
+			? executor.getClass().getSimpleName()
+			: "<executor:null>";
+		return String.format("%s%s:%s%s", indent, op, ex, children);
 	}
 
 	public Array<OperationTree> children() {

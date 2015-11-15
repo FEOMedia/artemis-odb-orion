@@ -53,7 +53,15 @@ public class OperationSystem extends IteratingSystem {
 	}
 
 	public void register(int entityId, OperationTree operation) {
-		operativeMapper.create(entityId).operations.add(operation);
+		if (operativeMapper.has(entityId)) {
+			operativeMapper.get(entityId).operations.add(operation);
+			operation.initialize(world, entityId, friend);
+		} else {
+			Operative operative = operativeMapper.create(entityId);
+			if (operative != null) { // null == pending deletion
+				operative.operations.add(operation);
+			}
+		}
 	}
 
 	@Override
@@ -94,10 +102,19 @@ public class OperationSystem extends IteratingSystem {
 		}
 	}
 
+	int frame;
+
 	@Override
 	protected void process(int e) {
 		Array<OperationTree> operations = operativeMapper.get(e).operations;
-		process(operations);
+		try {
+			process(operations);
+			frame++;
+		} catch (NullPointerException npe) {
+			String s = String.format("%d:%d\n%s", frame, e, operations);
+			System.err.println(s);
+			System.exit(1);
+		}
 
 		if (operations.size == 0) world.edit(e).remove(Operative.class);
 //			operativeMapper.remove(e); // artemis <= 1.1.2 bug, cancels entity deletion
