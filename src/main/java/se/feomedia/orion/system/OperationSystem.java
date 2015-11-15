@@ -102,19 +102,10 @@ public class OperationSystem extends IteratingSystem {
 		}
 	}
 
-	int frame;
-
 	@Override
 	protected void process(int e) {
 		Array<OperationTree> operations = operativeMapper.get(e).operations;
-		try {
 			process(operations);
-			frame++;
-		} catch (NullPointerException npe) {
-			String s = String.format("%d:%d\n%s", frame, e, operations);
-			System.err.println(s);
-			System.exit(1);
-		}
 
 		if (operations.size == 0) world.edit(e).remove(Operative.class);
 //			operativeMapper.remove(e); // artemis <= 1.1.2 bug, cancels entity deletion
