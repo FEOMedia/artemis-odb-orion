@@ -3,6 +3,9 @@ package se.feomedia.orion;
 import com.artemis.annotations.Wire;
 import se.feomedia.orion.system.OperationSystem;
 
+/**
+ * Repeats an operation N number of times.
+ */
 public class RepeatOperation extends ParentingOperation {
 	int total;
 	int acc;

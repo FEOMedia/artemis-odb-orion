@@ -1,10 +1,60 @@
-## Orion
+## artemis-odb-orion
 
-An Operations/Actions mini-DSL for artemis-odb entities. Inspired by similar Actions
- API:s, especially that of [libgdx](https://github.com/libgdx/libgdx).
+An Operations/Actions mini-DSL for artemis-odb entities, built on top of
+[libgdx](https://github.com/libgdx/libgdx). Inspired by similar Actions
+API:s, especially that of libgdx.
 
-### Features
+Provides a core collection of operations, and a simple-to-use framework for building
+custom, project-specific operations.
 
-- Bind compounded operations to entities.
-- Tied into the lifecycle of artemis-odb.
-- ...
+Code ends up looking something like:
+```java
+Entity e = ...
+sequence(
+    parallel(
+        sequence(
+            moveTo(xy(x, y)), // project-specific
+            moveBy(xy(0, type.size)), // project-specific
+            moveBy(xy(0, -type.size), seconds(.6f), bounceOut)
+        ),
+        sequence(
+            sizeTo(xy(-1, 0)), // project-specific
+            delay(seconds(.2f)),
+            sizeTo(xy(-1, type.size), seconds(.4f), swing)
+        )
+    ),
+    sendEvent(POPUP_ANIMATION_DONE) // project-specific
+).register(e);
+```
+
+## Features
+- Actions for entities, tied into artemis-odb's native lifecycle.
+- Custom operations are easy to write.
+- GC friendly: no unnecessary allocations, automatic pooling.
+- Save/load mid-operation using the
+  [artemis-json-libgdx](https://github.com/junkdog/artemis-odb/wiki/libgdx-json) backend.
+  - Serialized operations can also act as "attached scripts", automatically triggered on entity creation.
+
+## Usage
+
+No published artifacts yet - until released, install from source before referencing in project:
+
+```
+mvn clean install
+```
+
+#### Maven
+```xml
+<dependency>
+	<groupId>se.feomedia.orion</groupId>
+	<artifactId>artemis-odb-orion</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
+
+See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation) and [module overview](https://github.com/junkdog/artemis-odb/wiki/Module-Overview)
+
+#### Gradle
+```groovy
+  dependencies { compile "se.feomedia.orion:artemis-odb-orion:0.1.0-SNAPSHOT" }
+```

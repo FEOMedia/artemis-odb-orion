@@ -2,7 +2,7 @@ package se.feomedia.orion;
 
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.utils.Array;
-import se.feomedia.orion.operation.NullOperation;
+import se.feomedia.orion.operation.ZeroOperation;
 
 import static java.lang.Math.max;
 import static se.feomedia.orion.OperationFactory.operation;
@@ -27,7 +27,7 @@ public abstract class ParentingOperation extends Operation {
 
 	public void addChild(Operation op) {
 		if (op == null)
-			op = operation(NullOperation.class);
+			op = operation(ZeroOperation.class);
 
 		operations.add(op);
 	}

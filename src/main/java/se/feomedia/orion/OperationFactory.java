@@ -154,6 +154,10 @@ public final class OperationFactory {
 		return ifElse(!b, ifFalse);
 	}
 
+	public static ZeroOperation zero() {
+		return operation(ZeroOperation.class);
+	}
+
 	public static <T extends Operation> T operation(final Class<T> operationType) {
 		return pool(operationType).obtain();
 	}
@@ -173,6 +177,12 @@ public final class OperationFactory {
 	}
 
 
+	/**
+	 * If value is 0, returns the next highest float value.
+	 *
+	 * @param value seconds
+	 * @return time in seconds.
+	 */
 	public static float seconds(float value) {
 		if (value == 0) {
 			int raw = floatToRawIntBits(value);
@@ -190,10 +200,26 @@ public final class OperationFactory {
 		return random(seconds(min), max);
 	}
 
+
+	/**
+	 * Syntactic convenience returning a static {@link Vector2} - be
+	 * sure to never store the reference.
+	 *
+	 * @return static Vector2 instance.
+	 */
 	public static Vector2 xy(float x, float y) {
 		return xy.set(x, y);
 	}
 
+	/**
+	 * Base configuraiton for operations acting over time.
+	 *
+	 * @param op operation to configure
+	 * @param duration in seconds
+	 * @param interpolation any libgdx interpolation
+	 * @param <T> Temporal operation type
+	 * @return
+	 */
 	public static <T extends TemporalOperation> T configure(T op,
 	                                                        float duration,
 	                                                        Interpolation interpolation) {
