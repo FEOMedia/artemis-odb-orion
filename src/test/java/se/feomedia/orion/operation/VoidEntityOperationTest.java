@@ -57,7 +57,7 @@ public class VoidEntityOperationTest {
 			delayTick(1)
 		).register(w, entity);
 
-		// 1
+				// 1
 		w.delta = .1f;
 		w.process();
 
@@ -70,9 +70,9 @@ public class VoidEntityOperationTest {
 		w.delta = .1f;
 		w.process();
 
-		assertEquals(null, op.s);
+		assertEquals("hi!!!", op.s);
 		assertEquals("hepp", op2.s);
-		assertEquals(null, eOp.s);
+		assertEquals("eOp!!!", eOp.s);
 		assertEquals("eOp2", eOp2.s);
 
 		// 3
@@ -80,18 +80,18 @@ public class VoidEntityOperationTest {
 		w.delete(entity);
 		w.process();
 
-		assertEquals(null, op.s);
+		assertEquals("hi!!!", op.s);
 		assertEquals("hepp", op2.s);
-		assertEquals(null, eOp.s);
-		assertEquals("eOp2", eOp2.s);
+		assertEquals(null, eOp.s); // reclaimed
+		assertEquals(null, eOp2.s);
 
 		w.delta = .1f;
 		w.process(); // 4
 
-		assertEquals(null, op.s);
-		assertEquals(null, op2.s);
-		assertEquals(null, eOp.s);
-		assertEquals("eOp2", eOp2.s);
+		assertEquals("hi!!!", op.s);
+		assertEquals("hepp!!!", op2.s);
+		assertEquals(null, eOp.s); // reclaimed
+		assertEquals(null, eOp2.s);
 	}
 
 	public static class HiThereOperation extends SingleUseOperation {
@@ -118,6 +118,7 @@ public class VoidEntityOperationTest {
 		public static class HiThereExecutor extends SingleUseExecutor<HiThereOperation> {
 			@Override
 			protected void act(HiThereOperation op, OperationTree node) {
+				op.s += "!!!";
 			}
 		}
 	}

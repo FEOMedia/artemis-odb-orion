@@ -10,6 +10,7 @@ import com.artemis.io.SaveFileFormat;
 import com.artemis.managers.WorldSerializationManager;
 import org.junit.Test;
 import se.feomedia.orion.component.Operative;
+import se.feomedia.orion.io.InterpolationSerializer;
 import se.feomedia.orion.io.OperationTreeSerializer;
 import se.feomedia.orion.operation.SingleUseOperation;
 import se.feomedia.orion.system.OperationSystem;
@@ -40,6 +41,7 @@ public class JsonSerializationTest {
 
 		JsonArtemisSerializer backend = new JsonArtemisSerializer(world);
 		backend.prettyPrint(true);
+		InterpolationSerializer.registerAll(backend);
 		backend.register(OperationTree.class, new OperationTreeSerializer(world));
 		worldSerializer.setSerializer(backend);
 
@@ -80,7 +82,7 @@ public class JsonSerializationTest {
 		world.process();
 
 		assertNotNull(string[0]);
-		assertEquals(2, entity[0]);
+		assertEquals(e2, entity[0]);
 	}
 
 	private static String save(World world, Aspect.Builder aspect) {

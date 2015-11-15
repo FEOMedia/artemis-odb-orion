@@ -25,7 +25,8 @@ public abstract class Operation implements Pool.Poolable {
 	}
 
 	public OperationTree toNode(OperationTreeSerializer.Friend friend) {
-		return OperationTree.obtain(this);
+		friend.hashCode();
+		return toNode();
 	}
 
 	public final void register(World world, int entityId) {
