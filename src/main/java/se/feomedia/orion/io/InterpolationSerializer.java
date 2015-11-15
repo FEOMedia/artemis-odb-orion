@@ -166,7 +166,7 @@ public class InterpolationSerializer {
 
 		@Override
 		public Interpolation.Bounce read(Json json, JsonValue jsonData, Class type) {
-			Interpolation.Bounce interp = new Interpolation.Bounce(1);
+			Interpolation.Bounce interp = new Interpolation.Bounce(2);
 			json.readValue(Interpolation.Pow.class, jsonData.child);
 			return interp;
 		}
@@ -180,7 +180,7 @@ public class InterpolationSerializer {
 
 		@Override
 		public Interpolation.BounceIn read(Json json, JsonValue jsonData, Class type) {
-			Interpolation.BounceIn interp = new Interpolation.BounceIn(1);
+			Interpolation.BounceIn interp = new Interpolation.BounceIn(2);
 			json.readValue(Interpolation.Pow.class, jsonData.child);
 			return interp;
 		}
@@ -194,7 +194,7 @@ public class InterpolationSerializer {
 
 		@Override
 		public Interpolation.BounceOut read(Json json, JsonValue jsonData, Class type) {
-			Interpolation.BounceOut interp = new Interpolation.BounceOut(1);
+			Interpolation.BounceOut interp = new Interpolation.BounceOut(2);
 			json.readValue(Interpolation.Pow.class, jsonData.child);
 			return interp;
 		}
