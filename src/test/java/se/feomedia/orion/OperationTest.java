@@ -1,21 +1,23 @@
 package se.feomedia.orion;
 
+import com.artemis.MundaneWireException;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
-import junit.framework.TestCase;
 import org.junit.Test;
 import se.feomedia.orion.operation.DelayOperation;
 import se.feomedia.orion.operation.KillOperation;
 import se.feomedia.orion.operation.MySingleUseOperation;
+import se.feomedia.orion.operation.SingleUseOperation;
 import se.feomedia.orion.system.OperationSystem;
 
+import static org.junit.Assert.*;
 import static se.feomedia.orion.OperationFactory.*;
 import static se.feomedia.orion.OperationTestUtil.operatives;
 
-public class OperationTest extends TestCase {
+public class OperationTest {
 	@Test
 	public void test_hiearhical_clean_up() {
 		World world = new World(new WorldConfiguration()
@@ -164,11 +166,6 @@ public class OperationTest extends TestCase {
 		assertEquals(0, operatives(world).size());
 	}
 
-	private static void process(World world) {
-		world.delta = 1f / 60f;
-		world.process();
-	}
-
 	@Test
 	public void testSingleUseOperation() {
 		OperationSystem operationSystem = new OperationSystem();
@@ -182,6 +179,21 @@ public class OperationTest extends TestCase {
 
 		assertEquals(0, operatives(world).size());
 		assertSame(op, operation(MySingleUseOperation.class));
+	}
+
+	@Test(expected = MundaneWireException.class)
+	public void no_wire_failed_inject_test() {
+		World world = new World(new WorldConfiguration()
+			.setSystem(OperationSystem.class));
+
+		operation(NoWireNoInjectOperation.class).register(world);
+
+		process(world);
+	}
+
+	private static void process(World world) {
+		world.delta = 1f / 60f;
+		world.process();
 	}
 
 	public static class ManagerOperation extends Operation {
@@ -217,6 +229,24 @@ public class OperationTest extends TestCase {
 				groupManager = tagManager = null;
 
 				return delta;
+			}
+		}
+	}
+
+	public static class NoWireNoInjectOperation extends SingleUseOperation {
+		@Override
+		public Class<? extends Executor> executorType() {
+			return NoWireNoInjectExecutor.class;
+		}
+
+		public static class NoWireNoInjectExecutor extends SingleUseOperation.SingleUseExecutor<NoWireNoInjectOperation> {
+			private GroupManager groupManager;
+			private GroupManager tagManager;
+
+			@Override
+			protected void act(NoWireNoInjectOperation op, OperationTree node) {
+				assertNull(groupManager);
+				assertNull(tagManager);
 			}
 		}
 	}
