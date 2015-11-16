@@ -40,7 +40,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.Pow read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.Pow interp = new Interpolation.Pow(0);
-			json.readValue(Interpolation.Pow.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -54,7 +54,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.PowIn read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.PowIn interp = new Interpolation.PowIn(0);
-			json.readValue(Interpolation.PowIn.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -68,7 +68,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.PowOut read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.PowOut interp = new Interpolation.PowOut(0);
-			json.readValue(Interpolation.PowOut.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -82,7 +82,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.Exp read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.Exp interp = new Interpolation.Exp(1, 1);
-			json.readValue(Interpolation.Exp.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -96,7 +96,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.ExpIn read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.ExpIn interp = new Interpolation.ExpIn(1, 1);
-			json.readValue(Interpolation.ExpIn.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -110,7 +110,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.ExpOut read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.ExpOut interp = new Interpolation.ExpOut(1, 1);
-			json.readValue(Interpolation.ExpOut.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -125,7 +125,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.Elastic read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.Elastic interp = new Interpolation.Elastic(0, 0, 0, 0);
-			json.readValue(Interpolation.Pow.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -139,7 +139,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.ElasticIn read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.ElasticIn interp = new Interpolation.ElasticIn(0, 0, 0, 0);
-			json.readValue(Interpolation.Pow.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -153,7 +153,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.ElasticOut read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.ElasticOut interp = new Interpolation.ElasticOut(0, 0, 0, 0);
-			json.readValue(Interpolation.Pow.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -167,7 +167,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.Bounce read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.Bounce interp = new Interpolation.Bounce(2);
-			json.readValue(Interpolation.Pow.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -181,7 +181,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.BounceIn read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.BounceIn interp = new Interpolation.BounceIn(2);
-			json.readValue(Interpolation.Pow.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -195,7 +195,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.BounceOut read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.BounceOut interp = new Interpolation.BounceOut(2);
-			json.readValue(Interpolation.Pow.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -209,7 +209,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.Swing read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.Swing interp = new Interpolation.Swing(1);
-			json.readValue(Interpolation.Pow.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -223,7 +223,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.SwingIn read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.SwingIn interp = new Interpolation.SwingIn(1);
-			json.readValue(Interpolation.Pow.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
@@ -237,7 +237,7 @@ public class InterpolationSerializer {
 		@Override
 		public Interpolation.SwingOut read(Json json, JsonValue jsonData, Class type) {
 			Interpolation.SwingOut interp = new Interpolation.SwingOut(1);
-			json.readValue(Interpolation.Pow.class, jsonData.child);
+			json.readFields(interp, jsonData.child);
 			return interp;
 		}
 	}
