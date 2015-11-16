@@ -53,14 +53,10 @@ public class OperationSystem extends IteratingSystem {
 	}
 
 	public void register(int entityId, OperationTree operation) {
-		if (operativeMapper.has(entityId)) {
-			operativeMapper.get(entityId).operations.add(operation);
+		Operative operative = operativeMapper.create(entityId);
+		if (operative != null) { // null == pending deletion
+			operative.operations.add(operation);
 			operation.initialize(world, entityId, friend);
-		} else {
-			Operative operative = operativeMapper.create(entityId);
-			if (operative != null) { // null == pending deletion
-				operative.operations.add(operation);
-			}
 		}
 	}
 
