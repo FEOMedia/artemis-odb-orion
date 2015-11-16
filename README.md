@@ -31,7 +31,7 @@ sequence(
 - Actions for entities, tied into artemis-odb's native lifecycle.
 - Custom operations are easy to write.
 - GC friendly: no unnecessary allocations, automatic pooling.
-- Save/load mid-operation using the
+- Full serialization support, save/load mid-operation using the
   [artemis-json-libgdx](https://github.com/junkdog/artemis-odb/wiki/libgdx-json) backend.
   - Serialized operations can also act as "attached scripts", automatically triggered on entity creation.
 
