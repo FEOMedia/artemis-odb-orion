@@ -2,6 +2,7 @@ package se.feomedia.orion;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.operation.*;
@@ -9,11 +10,18 @@ import se.feomedia.orion.operation.*;
 import static com.badlogic.gdx.math.MathUtils.random;
 import static com.badlogic.gdx.utils.NumberUtils.floatToRawIntBits;
 import static com.badlogic.gdx.utils.NumberUtils.intBitsToFloat;
+import static java.lang.Math.max;
 
 public final class OperationFactory {
 
 	private static final Vector2 xy = new Vector2();
 	private static final Friend friend = new Friend();
+
+	/**
+	 * Create pools with this number of preallocated operations. Setting
+	 * is global, affects all worlds.
+	 */
+	public static int initialPoolSize = 16;
 
 	private static final ObjectMap<Class<? extends Operation>, Pool<?>> pools
 			= new ObjectMap<>();
@@ -169,7 +177,7 @@ public final class OperationFactory {
 	private static <T extends Operation> Pool<T> pool(Class<T> operationType) {
 		Pool<T> pool = (Pool<T>) pools.get(operationType);
 		if (pool == null) {
-			pool = new OperationPool<>(operationType);
+			pool = new OperationPool<>(operationType, max(1, initialPoolSize));
 			pools.put(operationType, pool);
 		}
 
@@ -235,8 +243,16 @@ public final class OperationFactory {
 	static class OperationPool<T extends Operation> extends Pool<T> {
 		private final Class<T> operationType;
 
-		public OperationPool(Class<T> operationType) {
+		public OperationPool(Class<T> operationType, int initialSize) {
+			super(initialSize);
 			this.operationType = operationType;
+
+			Array<T> initial = new Array<>(initialSize);
+			for (int i = 0; initialSize > i; i++) {
+				initial.add(newObject());
+			}
+
+			freeAll(initial);
 		}
 
 		@Override
