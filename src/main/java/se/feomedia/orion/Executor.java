@@ -16,8 +16,6 @@ import com.artemis.annotations.Wire;
  */
 @Wire
 public abstract class Executor<T extends Operation> {
-	public Operation parent;
-
 	public void initialize(World world) {}
 
 	/**
