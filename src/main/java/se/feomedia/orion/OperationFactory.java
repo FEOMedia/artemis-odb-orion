@@ -1,21 +1,18 @@
 package se.feomedia.orion;
 
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.operation.*;
 
-import static com.badlogic.gdx.math.MathUtils.random;
 import static com.badlogic.gdx.utils.NumberUtils.floatToRawIntBits;
 import static com.badlogic.gdx.utils.NumberUtils.intBitsToFloat;
 import static java.lang.Math.max;
 
 public final class OperationFactory {
-
-	private static final Vector2 xy = new Vector2();
-	private static final Friend friend = new Friend();
 
 	/**
 	 * Create pools with this number of preallocated operations. Setting
@@ -23,8 +20,13 @@ public final class OperationFactory {
 	 */
 	public static int initialPoolSize = 16;
 
+	private static final Vector2 xy = new Vector2();
+	private static final Friend friend = new Friend();
+
 	private static final ObjectMap<Class<? extends Operation>, Pool<?>> pools
 			= new ObjectMap<>();
+
+	private static final WeightPool weightPool = new WeightPool();
 
 	private OperationFactory() {}
 
@@ -170,6 +172,122 @@ public final class OperationFactory {
 		return pool(operationType).obtain();
 	}
 
+	public static Weight weight(float weight, Operation operation) {
+		Weight w = weightPool.obtain();
+		w.weight = weight;
+		w.op = operation;
+
+		return w;
+	}
+
+	public static RandomOperation random(Operation a) {
+		return random(
+			weight(1f, a));
+	}
+
+	public static RandomOperation random(Operation a,
+	                                     Operation b) {
+		return random(
+			weight(1f, a),
+			weight(1f, b));
+	}
+
+	public static RandomOperation random(Operation a,
+	                                     Operation b,
+	                                     Operation c) {
+		return random(
+			weight(1f, a),
+			weight(1f, b),
+			weight(1f, c));
+	}
+
+	public static RandomOperation random(Operation a,
+	                                     Operation b,
+	                                     Operation c,
+	                                     Operation d) {
+		return random(
+			weight(1f, a),
+			weight(1f, b),
+			weight(1f, c),
+			weight(1f, d));
+	}
+
+	public static RandomOperation random(Operation a,
+	                                     Operation b,
+	                                     Operation c,
+	                                     Operation d,
+	                                     Operation e) {
+
+		return random(
+			weight(1f, a),
+			weight(1f, b),
+			weight(1f, c),
+			weight(1f, d),
+			weight(1f, e));
+	}
+
+	public static RandomOperation random(Weight a) {
+		RandomOperation op = operation(RandomOperation.class);
+		op.configure(a.weight, a.op);
+		return op;
+	}
+
+	public static RandomOperation random(Weight a,
+	                                     Weight b) {
+
+		RandomOperation op = operation(RandomOperation.class);
+		op.configure(a.weight, a.op);
+		op.configure(b.weight, b.op);
+		return op;
+	}
+
+	public static RandomOperation random(Weight a,
+	                                     Weight b,
+	                                     Weight c) {
+
+		RandomOperation op = operation(RandomOperation.class);
+		op.configure(a.weight, a.op);
+		op.configure(b.weight, b.op);
+		op.configure(c.weight, c.op);
+		return op;
+	}
+
+	public static RandomOperation random(Weight a,
+	                                     Weight b,
+	                                     Weight c,
+	                                     Weight d) {
+
+		RandomOperation op = operation(RandomOperation.class);
+		op.configure(a.weight, a.op);
+		op.configure(b.weight, b.op);
+		op.configure(c.weight, c.op);
+		op.configure(d.weight, d.op);
+		return op;
+	}
+
+	public static RandomOperation random(Weight a,
+	                                     Weight b,
+	                                     Weight c,
+	                                     Weight d,
+	                                     Weight e) {
+
+		RandomOperation op = operation(RandomOperation.class);
+		op.configure(a.weight, a.op);
+		op.configure(b.weight, b.op);
+		op.configure(c.weight, c.op);
+		op.configure(d.weight, d.op);
+		op.configure(e.weight, e.op);
+		return op;
+	}
+
+	public static RandomOperation random(Operation op, Operation... ops) {
+		throw new RuntimeException();
+	}
+
+	public static RandomOperation random(Weight weight, Weight... weights) {
+		throw new RuntimeException();
+	}
+
 	static <T extends Operation> void free(Operation op) {
 		((Pool) pool(op.getClass())).free(op);
 	}
@@ -183,7 +301,6 @@ public final class OperationFactory {
 
 		return pool;
 	}
-
 
 	/**
 	 * If value is 0, returns the next highest float value.
@@ -205,7 +322,7 @@ public final class OperationFactory {
 	}
 
 	public static float secondsRng(float min, float max) {
-		return random(seconds(min), max);
+		return MathUtils.random(seconds(min), max);
 	}
 
 
@@ -238,6 +355,20 @@ public final class OperationFactory {
 
 	public static final class Friend {
 		private Friend() {}
+	}
+
+	public static class Weight {
+		Weight() {}
+
+		float weight;
+		Operation op;
+	}
+
+	static class WeightPool extends Pool<Weight> {
+		@Override
+		protected Weight newObject() {
+			return new Weight();
+		}
 	}
 
 	static class OperationPool<T extends Operation> extends Pool<T> {
