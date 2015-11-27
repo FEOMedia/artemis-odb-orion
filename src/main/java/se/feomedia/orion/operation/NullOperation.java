@@ -5,11 +5,11 @@ import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
 import se.feomedia.orion.OperationTree;
 
-public class ZeroOperation extends Operation {
+public class NullOperation extends Operation {
 
 	@Override
 	public Class<? extends Executor> executorType() {
-		return ZeroExecutor.class;
+		return NullExecutor.class;
 	}
 
 	@Override
@@ -21,9 +21,9 @@ public class ZeroOperation extends Operation {
 	public void reset() {}
 
 	@Wire
-	public static class ZeroExecutor extends Executor<ZeroOperation> {
+	public static class NullExecutor extends Executor<NullOperation> {
 		@Override
-		protected float act(float delta, ZeroOperation operation, OperationTree node) {
+		protected float act(float delta, NullOperation operation, OperationTree node) {
 			// this will never run, but the executor must still be resolved by
 			// the OperationSystem.
 			return delta;

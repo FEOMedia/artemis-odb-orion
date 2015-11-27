@@ -162,8 +162,8 @@ public final class OperationFactory {
 		return ifElse(!b, ifFalse);
 	}
 
-	public static ZeroOperation zero() {
-		return operation(ZeroOperation.class);
+	public static NullOperation noop() {
+		return operation(NullOperation.class);
 	}
 
 	public static <T extends Operation> T operation(final Class<T> operationType) {
