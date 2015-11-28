@@ -1,5 +1,6 @@
 package se.feomedia.orion.operation;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.FloatArray;
 import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
@@ -7,10 +8,9 @@ import se.feomedia.orion.OperationTree;
 import se.feomedia.orion.ParentingOperation;
 
 public class RandomOperation extends ParentingOperation {
-	private FloatArray cumulativeSums = new FloatArray();
-	private float accumulated;
-	private boolean initialized;
-	private int operationIndex;
+	FloatArray cumulativeSums = new FloatArray();
+	float accumulated;
+	int operationIndex;
 
 	@Override
 	public Class<? extends Executor> executorType() {
@@ -26,26 +26,34 @@ public class RandomOperation extends ParentingOperation {
 	}
 
 	private void validate(float weight) {
-		if (initialized)
+		if (started)
 			throw new IllegalStateException("operation already initialized");
 
 		if (weight < 0)
-			throw new IllegalArgumentException("weight < 0");
+			throw new IllegalArgumentException("weight < 0, was " + weight);
 	}
 
 	@Override
 	public void reset() {
 		super.reset();
 		cumulativeSums.clear();
-		initialized = false;
 		accumulated = 0;
 		operationIndex = 0;
 	}
 
 	public static class RandomExecutor extends ParentingExecutor<RandomOperation> {
 		@Override
-		protected void begin(RandomOperation operation, OperationTree node) {
-			super.begin(operation, node);
+		protected void begin(RandomOperation op, OperationTree node) {
+			int index = 0;
+			float rnd = MathUtils.random(op.accumulated);
+			for (int i = 0, s = op.cumulativeSums.size; s > i; i++) {
+				if (rnd < op.cumulativeSums.items[i])
+					break;
+
+				index++;
+			}
+
+			op.operationIndex = index;
 		}
 
 		@Override
