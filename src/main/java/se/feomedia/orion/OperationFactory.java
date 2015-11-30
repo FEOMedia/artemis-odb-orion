@@ -21,7 +21,6 @@ public final class OperationFactory {
 	public static int initialPoolSize = 16;
 
 	private static final Vector2 xy = new Vector2();
-	private static final Friend friend = new Friend();
 
 	private static final ObjectMap<Class<? extends Operation>, Pool<?>> pools
 			= new ObjectMap<>();
@@ -351,10 +350,6 @@ public final class OperationFactory {
 		op.duration = duration;
 		op.interpolation = interpolation;
 		return op;
-	}
-
-	public static final class Friend {
-		private Friend() {}
 	}
 
 	public static class Weight {
