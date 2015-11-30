@@ -25,6 +25,24 @@ public class InterpolationSerializer {
 		backend.register(Interpolation.SwingOut.class, new SwingOutSerializer());
 	}
 
+	public static void registerAll(Json backend) {
+		backend.setSerializer(Interpolation.Pow.class, new PowSerializer());
+		backend.setSerializer(Interpolation.PowIn.class, new PowInSerializer());
+		backend.setSerializer(Interpolation.PowOut.class, new PowOutSerializer());
+		backend.setSerializer(Interpolation.Exp.class, new ExpSerializer());
+		backend.setSerializer(Interpolation.ExpIn.class, new ExpInSerializer());
+		backend.setSerializer(Interpolation.ExpOut.class, new ExpOutSerializer());
+		backend.setSerializer(Interpolation.Elastic.class, new ElasticSerializer());
+		backend.setSerializer(Interpolation.ElasticIn.class, new ElasticInSerializer());
+		backend.setSerializer(Interpolation.ElasticOut.class, new ElasticOutSerializer());
+		backend.setSerializer(Interpolation.Bounce.class, new BounceSerializer());
+		backend.setSerializer(Interpolation.BounceIn.class, new BounceInSerializer());
+		backend.setSerializer(Interpolation.BounceOut.class, new BounceOutSerializer());
+		backend.setSerializer(Interpolation.Swing.class, new SwingSerializer());
+		backend.setSerializer(Interpolation.SwingIn.class, new SwingInSerializer());
+		backend.setSerializer(Interpolation.SwingOut.class, new SwingOutSerializer());
+	}
+
 	static void write(Json json, Interpolation object) {
 		json.writeObjectStart(object.getClass(), null);
 		json.writeFields(object);
