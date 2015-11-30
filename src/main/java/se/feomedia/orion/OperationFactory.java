@@ -168,7 +168,9 @@ public final class OperationFactory {
 	}
 
 	public static <T extends Operation> T operation(final Class<T> operationType) {
-		return pool(operationType).obtain();
+		T op = pool(operationType).obtain();
+		op.started = false;
+		return op;
 	}
 
 	public static Weight weight(float weight, Operation operation) {
@@ -279,12 +281,25 @@ public final class OperationFactory {
 		return op;
 	}
 
-	public static RandomOperation random(Operation op, Operation... ops) {
-		throw new RuntimeException();
+	public static RandomOperation random(Operation operation, Operation... ops) {
+		RandomOperation op = operation(RandomOperation.class);
+		op.configure(1, operation);
+		for (int i = 0; i < ops.length; i++) {
+			op.configure(1, ops[i]);
+		}
+
+		return op;
 	}
 
 	public static RandomOperation random(Weight weight, Weight... weights) {
-		throw new RuntimeException();
+		RandomOperation op = operation(RandomOperation.class);
+		op.configure(weight.weight, weight.op);
+		for (int i = 0; i < weights.length; i++) {
+			Weight w = weights[i];
+			op.configure(w.weight, w.op);
+		}
+
+		return op;
 	}
 
 	static <T extends Operation> void free(Operation op) {

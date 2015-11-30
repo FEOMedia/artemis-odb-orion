@@ -8,7 +8,7 @@ import se.feomedia.orion.OperationTree;
 import se.feomedia.orion.ParentingOperation;
 
 public class RandomOperation extends ParentingOperation {
-	FloatArray cumulativeSums = new FloatArray();
+	FloatArray cumulativeSums = new FloatArray(8);
 	float accumulated;
 	int operationIndex;
 
