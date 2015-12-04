@@ -28,6 +28,13 @@ public abstract class Executor<T extends Operation> {
 	 */
 	protected abstract float act(float delta, T operation, OperationTree node);
 
+	/**
+	 * Called before the first time {@link #act(float, Operation, OperationTree)}
+	 * is called.
+	 *
+	 * @param operation Current operation.
+	 * @param node Current node, hosting the operation.
+	 */
 	protected void begin(T operation, OperationTree node) {}
 
 	protected final float process(float delta, Operation operation, OperationTree node) {

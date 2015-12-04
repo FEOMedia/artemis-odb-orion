@@ -2,6 +2,7 @@ package se.feomedia.orion.system;
 
 import com.artemis.*;
 import com.artemis.systems.IteratingSystem;
+import com.badlogic.gdx.math.OrionKryoSerialization;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.Kryo;
@@ -46,6 +47,8 @@ public class OperationSystem extends IteratingSystem {
 		kryo.register(RepeatOperation.RepeatExecutor.class);
 		kryo.register(SequenceOperation.class);
 		kryo.register(SequenceOperation.SequenceExecutor.class);
+
+		OrionKryoSerialization.configure(this);
 	}
 
 	public <T extends Operation> T copy(T operation) {
