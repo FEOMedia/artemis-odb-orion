@@ -9,10 +9,7 @@ import com.esotericsoftware.kryo.Kryo;
 import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
 import se.feomedia.orion.OperationTree;
-import se.feomedia.orion.RepeatOperation;
 import se.feomedia.orion.component.Operative;
-import se.feomedia.orion.kryo.OperationInstantiator;
-import se.feomedia.orion.operation.*;
 
 import static com.artemis.Aspect.all;
 
@@ -32,22 +29,6 @@ public class OperationSystem extends IteratingSystem {
 	@Override
 	protected void initialize() {
 		kryo = new Kryo();
-		kryo.setInstantiatorStrategy(new OperationInstantiator());
-		kryo.register(DelayOperation.class);
-		kryo.register(DelayOperation.DelayExecutor.class);
-		kryo.register(DelayTickOperation.class);
-		kryo.register(DelayTickOperation.DelayTickExecutor.class);
-		kryo.register(IfElseOperation.class);
-		kryo.register(IfElseOperation.IfElseExecutor.class);
-		kryo.register(KillOperation.class);
-		kryo.register(KillOperation.KillExecutor.class);
-		kryo.register(ParallelOperation.class);
-		kryo.register(ParallelOperation.ParallelExecutor.class);
-		kryo.register(RepeatOperation.class);
-		kryo.register(RepeatOperation.RepeatExecutor.class);
-		kryo.register(SequenceOperation.class);
-		kryo.register(SequenceOperation.SequenceExecutor.class);
-
 		OrionKryoSerialization.configure(this);
 	}
 

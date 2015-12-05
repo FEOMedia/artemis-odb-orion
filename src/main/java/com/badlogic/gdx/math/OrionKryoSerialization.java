@@ -4,6 +4,9 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import se.feomedia.orion.RepeatOperation;
+import se.feomedia.orion.kryo.OperationInstantiator;
+import se.feomedia.orion.operation.*;
 import se.feomedia.orion.system.OperationSystem;
 
 import java.lang.reflect.Field;
@@ -13,6 +16,22 @@ import static java.lang.Math.abs;
 public class OrionKryoSerialization {
 	public static void configure(OperationSystem operationSystem) {
 		Kryo kryo = operationSystem.kryo;
+		kryo.setInstantiatorStrategy(new OperationInstantiator());
+		kryo.register(DelayOperation.class);
+		kryo.register(DelayOperation.DelayExecutor.class);
+		kryo.register(DelayTickOperation.class);
+		kryo.register(DelayTickOperation.DelayTickExecutor.class);
+		kryo.register(IfElseOperation.class);
+		kryo.register(IfElseOperation.IfElseExecutor.class);
+		kryo.register(KillOperation.class);
+		kryo.register(KillOperation.KillExecutor.class);
+		kryo.register(ParallelOperation.class);
+		kryo.register(ParallelOperation.ParallelExecutor.class);
+		kryo.register(RepeatOperation.class);
+		kryo.register(RepeatOperation.RepeatExecutor.class);
+		kryo.register(SequenceOperation.class);
+		kryo.register(SequenceOperation.SequenceExecutor.class);
+
 		kryo.register(Interpolation.Pow.class, new PowSerializer());
 		kryo.register(Interpolation.PowIn.class, new PowInSerializer());
 		kryo.register(Interpolation.PowOut.class, new PowOutSerializer());
@@ -227,7 +246,7 @@ public class OrionKryoSerialization {
 
 		public SwingSerializer() {
 			try {
-				field = SwingSerializer.class.getDeclaredField("scale");
+				field = Interpolation.Swing.class.getDeclaredField("scale");
 				field.setAccessible(true);
 			} catch (NoSuchFieldException e) {
 				throw new RuntimeException(e);
@@ -263,7 +282,7 @@ public class OrionKryoSerialization {
 
 		public SwingInSerializer() {
 			try {
-				field = SwingInSerializer.class.getDeclaredField("scale");
+				field = Interpolation.SwingIn.class.getDeclaredField("scale");
 				field.setAccessible(true);
 			} catch (NoSuchFieldException e) {
 				throw new RuntimeException(e);
@@ -299,7 +318,7 @@ public class OrionKryoSerialization {
 
 		public SwingOutSerializer() {
 			try {
-				field = SwingOutSerializer.class.getDeclaredField("scale");
+				field = Interpolation.SwingOut.class.getDeclaredField("scale");
 				field.setAccessible(true);
 			} catch (NoSuchFieldException e) {
 				throw new RuntimeException(e);
@@ -336,9 +355,9 @@ public class OrionKryoSerialization {
 
 		public BounceSerializer() {
 			try {
-				fieldW = SwingOutSerializer.class.getDeclaredField("widths");
+				fieldW = Interpolation.BounceOut.class.getDeclaredField("widths");
 				fieldW.setAccessible(true);
-				fieldH = SwingOutSerializer.class.getDeclaredField("heights");
+				fieldH = Interpolation.BounceOut.class.getDeclaredField("heights");
 				fieldH.setAccessible(true);
 			} catch (NoSuchFieldException e) {
 				throw new RuntimeException(e);
@@ -386,9 +405,9 @@ public class OrionKryoSerialization {
 
 		public BounceInSerializer() {
 			try {
-				fieldW = SwingOutSerializer.class.getDeclaredField("widths");
+				fieldW = Interpolation.BounceOut.class.getDeclaredField("widths");
 				fieldW.setAccessible(true);
-				fieldH = SwingOutSerializer.class.getDeclaredField("heights");
+				fieldH = Interpolation.BounceOut.class.getDeclaredField("heights");
 				fieldH.setAccessible(true);
 			} catch (NoSuchFieldException e) {
 				throw new RuntimeException(e);
@@ -436,9 +455,9 @@ public class OrionKryoSerialization {
 
 		public BounceOutSerializer() {
 			try {
-				fieldW = SwingOutSerializer.class.getDeclaredField("widths");
+				fieldW = Interpolation.BounceOut.class.getDeclaredField("widths");
 				fieldW.setAccessible(true);
-				fieldH = SwingOutSerializer.class.getDeclaredField("heights");
+				fieldH = Interpolation.BounceOut.class.getDeclaredField("heights");
 				fieldH.setAccessible(true);
 			} catch (NoSuchFieldException e) {
 				throw new RuntimeException(e);
