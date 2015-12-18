@@ -1,6 +1,5 @@
 package se.feomedia.orion;
 
-import com.artemis.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.system.OperationSystem;
@@ -78,12 +77,7 @@ public class OperationTree {
 		return children;
 	}
 
-	public void initialize(World world, int entityId, OperationSystem.Friend friend) {
-		friend.hashCode();
-		initialize(world.getSystem(OperationSystem.class), entityId);
-	}
-
-	void initialize(OperationSystem operations, int entityId) {
+	public void initialize(OperationSystem operations, int entityId) {
 		executor = operations.getExecutor(operation, friend);
 
 		operation.entityId = entityId;

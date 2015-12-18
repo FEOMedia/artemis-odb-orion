@@ -17,7 +17,6 @@ public class OperationSystem extends IteratingSystem {
 	private ComponentMapper<Operative> operativeMapper;
 
 	private ObjectMap<Class<? extends Executor>, Executor> executors = new ObjectMap<>();
-	private final Friend friend = new Friend();
 
 	private Operative voidEntityOperations = new Operative();
 	public Kryo kryo;
@@ -40,7 +39,7 @@ public class OperationSystem extends IteratingSystem {
 		Operative operative = operativeMapper.create(entityId);
 		if (operative != null) { // null == pending deletion
 			operative.operations.add(operation);
-			operation.initialize(world, entityId, friend);
+			operation.initialize(this, entityId);
 		}
 	}
 
@@ -48,12 +47,12 @@ public class OperationSystem extends IteratingSystem {
 	protected void inserted(int entityId) {
 		Array<OperationTree> operations = operativeMapper.get(entityId).operations;
 		for (int i = 0, s = operations.size; s > i; i++) {
-			operations.get(i).initialize(world, entityId, friend);
+			operations.get(i).initialize(this, entityId);
 		}
 	}
 
 	public void register(OperationTree operation) {
-		operation.initialize(world, -1, friend);
+		operation.initialize(this, -1);
 		voidEntityOperations.operations.add(operation);
 	}
 
@@ -133,9 +132,5 @@ public class OperationSystem extends IteratingSystem {
 		}
 
 		operations.clear();
-	}
-
-	public static final class Friend {
-		private Friend() {}
 	}
 }
