@@ -42,7 +42,7 @@ public class JsonSerializationTest {
 		JsonArtemisSerializer backend = new JsonArtemisSerializer(world);
 		backend.prettyPrint(true);
 		InterpolationSerializer.registerAll(backend);
-		backend.register(OperationTree.class, new OperationTreeSerializer(world));
+		backend.register(OperationTree.class, new OperationTreeSerializer());
 		worldSerializer.setSerializer(backend);
 
 		int e0 = world.create();
