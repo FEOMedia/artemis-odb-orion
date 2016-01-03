@@ -10,7 +10,7 @@ public class RepeatOperation extends ParentingOperation {
 	int total;
 	int acc;
 
-	Operation repeated;
+	transient Operation repeated;
 
 	@Override
 	public Class<? extends Executor> executorType() {
