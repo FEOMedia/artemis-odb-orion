@@ -25,7 +25,7 @@ public class ParallelOperation extends ParentingOperation {
 
 			float remaining = delta;
 			Array<OperationTree> children = node.children();
-			for (int i = 0, s = children.size; s > i; i++) {
+			for (int i = 0; children.size > i; i++) {
 				OperationTree ot = children.get(i);
 				remaining = min(remaining, ot.act(delta));
 			}

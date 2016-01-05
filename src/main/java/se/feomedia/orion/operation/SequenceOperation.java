@@ -23,7 +23,7 @@ public class SequenceOperation extends ParentingOperation {
 		@Override
 		protected float act(float delta, SequenceOperation op, OperationTree node) {
 			Array<OperationTree> children = node.children();
-			for (int i = 0, s = children.size; s > i; i++) {
+			for (int i = 0; children.size > i; i++) {
 				OperationTree ot = children.get(i);
 				delta = ot.act(delta);
 				if (delta <= 0)
