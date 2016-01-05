@@ -46,8 +46,6 @@ public abstract class Executor<T extends Operation> {
 			operation.started = true;
 		}
 
-		delta = act(delta, (T) operation, node);
-
-		return delta;
+		return act(delta, (T) operation, node);
 	}
 }

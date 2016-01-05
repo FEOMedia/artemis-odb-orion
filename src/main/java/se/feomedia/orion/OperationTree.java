@@ -4,6 +4,15 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.system.OperationSystem;
 
+/**
+ * <p>The registered representation of an operation. Each node holds
+ * on operation and executor pair. The entire tree is automatically
+ * reclaimed once the root operation finishes.</p>
+ *
+ * <p>Operations are allowed to graft new nodes through their executors
+ * (but tread carefully). Manipulating previously processed operations
+ * is harder, as most base types cache completion status.</p>
+ */
 public class OperationTree {
 
 	Operation operation;
@@ -97,10 +106,12 @@ public class OperationTree {
 		ot.parent = null;
 		ot.executor = null;
 
-		for (OperationTree node : ot.children) {
-			clear(node);
+		if (ot.children.size > 0) {
+			for (OperationTree node : ot.children) {
+				clear(node);
+			}
+			ot.children.clear();
 		}
-		ot.children.clear();
 
 		pool.free(ot);
 	}
