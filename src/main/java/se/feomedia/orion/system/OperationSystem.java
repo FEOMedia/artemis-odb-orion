@@ -43,17 +43,17 @@ public class OperationSystem extends IteratingSystem {
 		}
 	}
 
+	public void register(OperationTree operation) {
+		operation.initialize(this, -1);
+		voidEntityOperations.operations.add(operation);
+	}
+
 	@Override
 	protected void inserted(int entityId) {
 		Array<OperationTree> operations = operativeMapper.get(entityId).operations;
 		for (int i = 0, s = operations.size; s > i; i++) {
 			operations.get(i).initialize(this, entityId);
 		}
-	}
-
-	public void register(OperationTree operation) {
-		operation.initialize(this, -1);
-		voidEntityOperations.operations.add(operation);
 	}
 
 	public Executor getExecutor(Operation operation, OperationTree.Friend friend) {
