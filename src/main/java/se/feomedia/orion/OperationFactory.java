@@ -123,6 +123,13 @@ public final class OperationFactory {
 		return action;
 	}
 
+	public static RunOperation run(Runnable runnable) {
+		RunOperation op = operation(RunOperation.class);
+		op.runnable = runnable;
+
+		return op;
+	}
+
 	public static DelayOperation delay(float duration) {
 		DelayOperation action = operation(DelayOperation.class);
 		action.duration = duration;
