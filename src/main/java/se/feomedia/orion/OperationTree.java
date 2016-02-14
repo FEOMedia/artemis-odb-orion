@@ -116,6 +116,28 @@ public class OperationTree {
 		pool.free(ot);
 	}
 
+	/**
+	 * Finds all operations. Only this and child nodes are scanned.
+	 *
+	 * @param type Operation type
+	 * @param out Result array, be sure to clear before.
+	 * @return all operations matching requested type
+	 */
+	public <T extends Operation> Array<T> findAll(Class<T> type, Array<T> out) {
+		Operation op = this.operation;
+		if (isSameType(type, op))
+			out.add((T) op);
+
+		for (int i = 0, s = children.size; s > i; i++)
+			children.get(i).findAll(type, out);
+
+		return out;
+	}
+
+	private static <T extends Operation> boolean isSameType(Class<T> type, Operation op) {
+		return type.isAssignableFrom(op.getClass());
+	}
+
 	public static final class Friend {
 		private Friend() {}
 	}

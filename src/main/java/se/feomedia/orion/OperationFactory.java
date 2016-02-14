@@ -170,6 +170,13 @@ public final class OperationFactory {
 		return ifElse(!b, ifFalse);
 	}
 
+	public static UniqueOperation unique(String tag, Operation operation) {
+		UniqueOperation op = operation(UniqueOperation.class);
+		op.configure(tag, operation);
+
+		return op;
+	}
+
 	public static NullOperation noop() {
 		return operation(NullOperation.class);
 	}

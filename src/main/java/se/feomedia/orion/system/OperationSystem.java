@@ -35,6 +35,10 @@ public class OperationSystem extends IteratingSystem {
 		return kryo.copy(operation);
 	}
 
+	public Array<OperationTree> getVoidEntityOperations() {
+		return voidEntityOperations.operations;
+	}
+
 	public void register(int entityId, OperationTree operation) {
 		Operative operative = operativeMapper.create(entityId);
 		if (operative != null) { // null == pending deletion
