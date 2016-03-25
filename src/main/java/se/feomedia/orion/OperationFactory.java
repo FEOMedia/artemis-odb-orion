@@ -123,12 +123,63 @@ public final class OperationFactory {
 		return action;
 	}
 
+	/**
+	 * Runs until completion. This operation can't be
+	 * serialized.
+	 *
+	 * @param runnable Runs on the main thread.
+	 * @return The operation
+	 */
 	public static RunOperation run(Runnable runnable) {
 		RunOperation op = operation(RunOperation.class);
 		op.runnable = runnable;
 
 		return op;
 	}
+
+	/**
+	 * <p>
+	 * Runs any operation on another entity. The forked operation
+	 * is marked as compeleted when the operation finishes or
+	 * when the target entity is deleted.
+	 * </p>
+	 * <p>
+	 * Serialization compatible.
+	 * </p>
+	 * @param tag as registered with the {@link com.artemis.managers.TagManager}
+	 * @param operation operation to run on the entity
+	 * @return the fork operation
+	 */
+	public static ForkOperation fork(String tag, Operation operation) {
+		ForkOperation op = operation(ForkOperation.class);
+		op.configure(-1, tag, operation);
+
+		return op;
+	}
+
+	/**
+	 * <p>
+	 * Runs any operation on another entity. The forked operation
+	 * is marked as compeleted when the operation finishes or
+	 * when the target entity is deleted.
+	 * </p>
+	 * <p>
+	 * This operation is incompatible with serialization, as the
+	 * entity id translation only works for operations directly
+	 * attached to the entity.
+	 * </p>
+	 *
+	 * @param entityId as registered with the {@link com.artemis.managers.TagManager}
+	 * @param operation operation to run on the entity
+	 * @return the fork operation
+	 */
+	public static ForkOperation fork(int entityId, Operation operation) {
+		ForkOperation op = operation(ForkOperation.class);
+		op.configure(entityId, null, operation);
+
+		return op;
+	}
+
 
 	public static DelayOperation delay(float duration) {
 		DelayOperation action = operation(DelayOperation.class);
