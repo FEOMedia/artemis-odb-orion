@@ -226,7 +226,7 @@ public final class OperationFactory {
 	 * operation at any time. It is primarily used for cancelling conflicting
 	 * or invalid operations.</p>
 	 *
-	 * <p>Example: <code>unique</code> control UI widget interactions, with
+	 * <p>Example: <code>unique</code> controlling UI widget interactions, with
 	 * different durations for touch/click:</p>
 	 *
 	 * <pre>
