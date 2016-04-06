@@ -50,7 +50,7 @@ public class UniqueOperation extends ParentingOperation {
 
 		private Array<OperationTree> allOperations(UniqueOperation op) {
 			return (op.entityId != -1) // if -1, free-floating operation
-				? operativeMapper.get(op.entityId).operations
+				? operativeMapper.create(op.entityId).operations
 				: operationSystem.getVoidEntityOperations();
 		}
 
