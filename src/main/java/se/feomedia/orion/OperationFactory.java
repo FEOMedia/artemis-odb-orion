@@ -221,6 +221,37 @@ public final class OperationFactory {
 		return ifElse(!b, ifFalse);
 	}
 
+	/**
+	 * <p>An entity may only have a single non-completed <code>unique</code>
+	 * operation at any time. It is primarily used for cancelling conflicting
+	 * or invalid operations.</p>
+	 *
+	 * <p>Example: <code>unique</code> control UI widget interactions, with
+	 * different durations for touch/click:</p>
+	 *
+	 * <pre>
+	 * private void touch(Entity e) {
+	 *     unique("interact", // marks any other unique("interact") as complete
+	 *         scaleTo(.75f, seconds(.1f), pow2)
+	 *     ).register(e);
+	 * }
+	 *
+	 * private void click(Entity e) {
+	 *     unique("interact", // marks any other unique("interact") as complete
+	 *         sequence(
+	 *             removeComponent(Touchable.class),
+	 *             scaleTo(1f, seconds(.5f), bounceOut),
+	 *             sendEvent(e),
+	 *             createComponent(Touchable.class)
+	 *         )
+	 *     ).register(e);
+	 * }
+	 * </pre>
+	 *
+	 * @param tag Unique per-entity id
+	 * @param operation Operation to run.
+	 * @return requested operation.
+	 */
 	public static UniqueOperation unique(String tag, Operation operation) {
 		UniqueOperation op = operation(UniqueOperation.class);
 		op.configure(tag, operation);
