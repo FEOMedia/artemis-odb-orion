@@ -28,7 +28,7 @@ public class OperationSystem extends IteratingSystem {
 	@Override
 	protected void initialize() {
 		kryo = new Kryo();
-		OrionKryoSerialization.configure(this);
+		OrionKryoSerialization.configure(kryo);
 	}
 
 	public <T extends Operation> T copy(T operation) {

@@ -14,8 +14,7 @@ import java.lang.reflect.Field;
 import static java.lang.Math.abs;
 
 public class OrionKryoSerialization {
-	public static void configure(OperationSystem operationSystem) {
-		Kryo kryo = operationSystem.kryo;
+	public static void configure(Kryo kryo) {
 		kryo.setInstantiatorStrategy(new OperationInstantiator());
 		kryo.register(DelayOperation.class);
 		kryo.register(DelayOperation.DelayExecutor.class);
