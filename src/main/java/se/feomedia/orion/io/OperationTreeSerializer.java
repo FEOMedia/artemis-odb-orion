@@ -2,11 +2,12 @@ package se.feomedia.orion.io;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import se.feomedia.orion.InternalUtil;
 import se.feomedia.orion.Operation;
 import se.feomedia.orion.OperationTree;
 
 public class OperationTreeSerializer implements Json.Serializer<OperationTree> {
-	private final Friend friend = new Friend();
+	private final InternalUtil util = new InternalUtil(new Friend());
 
 	public OperationTreeSerializer() {
 	}
@@ -23,9 +24,9 @@ public class OperationTreeSerializer implements Json.Serializer<OperationTree> {
 		try {
 			Class<Operation> opType =
 				(Class<Operation>) Class.forName(jsonData.child.child.asString());
-			Operation op = json.readValue(opType, jsonData.child);
 
-			return op.toNode(friend);
+			Operation op = json.readValue(opType, jsonData.child);
+			return util.toNode(op);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}

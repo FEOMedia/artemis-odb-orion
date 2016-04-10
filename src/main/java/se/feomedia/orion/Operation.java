@@ -3,7 +3,6 @@ package se.feomedia.orion;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.badlogic.gdx.utils.Pool;
-import se.feomedia.orion.io.OperationTreeSerializer;
 import se.feomedia.orion.system.OperationSystem;
 
 /**
@@ -22,11 +21,6 @@ public abstract class Operation implements Pool.Poolable {
 
 	protected OperationTree toNode() {
 		return OperationTree.obtain(this);
-	}
-
-	public OperationTree toNode(OperationTreeSerializer.Friend friend) {
-		friend.hashCode();
-		return toNode();
 	}
 
 	public final void register(World world, int entityId) {
@@ -49,4 +43,5 @@ public abstract class Operation implements Pool.Poolable {
 	public final void register(World world) {
 		world.getSystem(OperationSystem.class).register(toNode());
 	}
+
 }

@@ -4,10 +4,11 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import se.feomedia.orion.OperationTree;
 import se.feomedia.orion.RepeatOperation;
+import se.feomedia.orion.kryo.KryoOperationTreeSerializer;
 import se.feomedia.orion.kryo.OperationInstantiator;
 import se.feomedia.orion.operation.*;
-import se.feomedia.orion.system.OperationSystem;
 
 import java.lang.reflect.Field;
 
@@ -16,6 +17,7 @@ import static java.lang.Math.abs;
 public class OrionKryoSerialization {
 	public static void configure(Kryo kryo) {
 		kryo.setInstantiatorStrategy(new OperationInstantiator());
+		kryo.register(OperationTree.class, new KryoOperationTreeSerializer());
 		kryo.register(DelayOperation.class);
 		kryo.register(DelayOperation.DelayExecutor.class);
 		kryo.register(DelayTickOperation.class);
