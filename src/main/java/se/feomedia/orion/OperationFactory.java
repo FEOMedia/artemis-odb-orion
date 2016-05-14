@@ -427,6 +427,16 @@ public final class OperationFactory {
 		return value;
 	}
 
+	/**
+	 * If value is 0, returns the next highest float value.
+	 *
+	 * @param value milliseconds
+	 * @return time in milliseconds.
+	 */
+	public static float milliseconds(float value) {
+		return seconds(value) / 1000f;
+	}
+
 	public static float secondsRng(float max) {
 		return secondsRng(0, seconds(max));
 	}
