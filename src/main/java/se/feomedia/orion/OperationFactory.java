@@ -1,5 +1,6 @@
 package se.feomedia.orion;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -178,6 +179,26 @@ public final class OperationFactory {
 		op.configure(entityId, null, operation);
 
 		return op;
+	}
+
+	/**
+	 * <p>
+	 * Runs any operation on another entity. The forked operation
+	 * is marked as compeleted when the operation finishes or
+	 * when the target entity is deleted.
+	 * </p>
+	 * <p>
+	 * This operation is incompatible with serialization, as the
+	 * entity id translation only works for operations directly
+	 * attached to the entity.
+	 * </p>
+	 *
+	 * @param e as registered with the {@link com.artemis.managers.TagManager}
+	 * @param operation operation to run on the entity
+	 * @return the fork operation
+	 */
+	public static ForkOperation fork(Entity e, Operation operation) {
+		return fork(e.getId(), operation);
 	}
 
 
