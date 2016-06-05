@@ -56,6 +56,9 @@ public class UniqueOperation extends ParentingOperation {
 
 		@Override
 		protected float act(float delta, UniqueOperation op, OperationTree node) {
+			if (op.completed) // avoid processing the tick it was
+				return delta; // invalidated by another unique
+
 			OperationTree wrapped = node.children().get(0);
 			delta = wrapped.act(delta);
 			op.completed = wrapped.isComplete();
