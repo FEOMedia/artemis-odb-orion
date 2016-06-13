@@ -1,14 +1,13 @@
 package se.feomedia.orion;
 
 import com.artemis.Entity;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.operation.*;
 
+import static com.badlogic.gdx.math.Interpolation.linear;
 import static com.badlogic.gdx.utils.NumberUtils.floatToRawIntBits;
 import static com.badlogic.gdx.utils.NumberUtils.intBitsToFloat;
 import static java.lang.Math.max;
@@ -415,6 +414,42 @@ public final class OperationFactory {
 			Weight w = weights[i];
 			op.configure(w.weight, w.op);
 		}
+
+		return op;
+	}
+
+	public static TranslateVector2Operation translate(Vector2 v, Vector2 destination) {
+		return translate(v, destination, 0, linear);
+	}
+
+	public static TranslateVector2Operation translate(Vector2 v,
+	                                                  Vector2 destination,
+	                                                  float duration,
+	                                                  Interpolation interpolation) {
+
+		TranslateVector2Operation op = operation(TranslateVector2Operation.class);
+		configure(op, duration, interpolation);
+
+		op.value = v;
+		op.end.set(destination);
+
+		return op;
+	}
+
+	public static TranslateVector3Operation translate(Vector3 v, Vector3 destination) {
+		return translate(v, destination, 0, linear);
+	}
+
+	public static TranslateVector3Operation translate(Vector3 v,
+	                                                  Vector3 destination,
+	                                                  float duration,
+	                                                  Interpolation interpolation) {
+
+		TranslateVector3Operation op = operation(TranslateVector3Operation.class);
+		configure(op, duration, interpolation);
+
+		op.value = v;
+		op.end.set(destination);
 
 		return op;
 	}
