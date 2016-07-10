@@ -25,6 +25,16 @@ public class OperationSystem extends IteratingSystem {
 		super(all(Operative.class));
 	}
 
+	/**
+	 * Constructor with specialized aspect. Can be used to add <code>exclude</code>
+	 * components for entities otherwise marked as disabled.
+	 *
+	 * @param base Useful for excluding disabled entities in projects.
+	 */
+	public OperationSystem(Aspect.Builder base) {
+		super(base.all(Operative.class));
+	}
+
 	@Override
 	protected void initialize() {
 		kryo = new Kryo();
