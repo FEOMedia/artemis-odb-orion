@@ -215,6 +215,10 @@ public final class OperationFactory {
 		return op;
 	}
 
+	public static Operation forever(Operation operation) {
+		return repeat(Integer.MAX_VALUE, operation);
+	}
+
 	public static DelayTickOperation delayTick(int ticksToWait) {
 		DelayTickOperation action = operation(DelayTickOperation.class);
 		action.ticksToWait = ticksToWait;
