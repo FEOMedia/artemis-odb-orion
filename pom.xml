@@ -11,7 +11,7 @@
 	<description>Operations mini-DSL specialized to deal with artemis-odb entities</description>
 
 	<properties>
-		<artemis.version>2.0.0-RC3</artemis.version>
+		<artemis.version>2.0.0-RC4</artemis.version>
 		<libgdx.version>1.9.3</libgdx.version>
 	</properties>
 
