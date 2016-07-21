@@ -16,6 +16,8 @@ import se.feomedia.orion.operation.SingleUseOperation;
 import se.feomedia.orion.system.OperationSystem;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
@@ -93,10 +95,12 @@ public class JsonSerializationTest {
 	}
 
 	private static String save(WorldSerializationManager manager, EntitySubscription subscription) {
-		StringWriter writer = new StringWriter();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+
 		SaveFileFormat save = new SaveFileFormat(subscription.getEntities());
-		manager.save(writer, save);
-		return writer.toString();
+		manager.save(ps, save);
+		return baos.toString();
 	}
 
 	public static class EntityWriterOperation extends SingleUseOperation {
