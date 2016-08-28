@@ -16,36 +16,53 @@ import com.artemis.annotations.Wire;
  */
 @Wire
 public abstract class Executor<T extends Operation> {
-	public void initialize(World world) {}
+    public void initialize(World world) {}
 
-	/**
-	 * Updates the operation.
-	 *
-	 * @param delta since last frame
-	 * @param operation the operation
-	 * @param node node hosting this operation
-	 * @return new delta, may be same if operation was instant.
-	 */
-	protected abstract float act(float delta, T operation, OperationTree node);
+    /**
+     * Updates the operation.
+     *
+     * @param delta since last frame
+     * @param operation the operation
+     * @param node node hosting this operation
+     * @return new delta, may be same if operation was instant.
+     */
+    protected abstract float act(float delta, T operation, OperationTree node);
 
-	/**
-	 * Called before the first time {@link #act(float, Operation, OperationTree)}
-	 * is called.
-	 *
-	 * @param operation Current operation.
-	 * @param node Current node, hosting the operation.
-	 */
-	protected void begin(T operation, OperationTree node) {}
+    /**
+     * Called before the first time {@link #act(float, Operation, OperationTree)}
+     * is called.
+     *
+     * @param operation Current operation.
+     * @param node Current node, hosting the operation.
+     */
+    protected void begin(T operation, OperationTree node) {}
 
-	protected final float process(float delta, Operation operation, OperationTree node) {
-		if (operation.isComplete())
-			return delta;
+    protected final float process(float delta, Operation operation, OperationTree node) {
+        if (operation.isComplete()) {
+            return delta;
+        }
 
-		if (!operation.started) {
-			begin((T) operation, node);
-			operation.started = true;
-		}
+        if (!operation.started) {
+            begin((T) operation, node);
+            operation.started = true;
+        }
 
-		return act(delta, (T) operation, node);
-	}
+        float dt = act(delta, (T) operation, node);
+
+        if (operation.isComplete()) {
+            end((T) operation, node);
+        }
+
+        return dt;
+    }
+
+    /**
+     * Called when {@link Operation#isComplete()} returns true
+     *
+     * @param operation Current operation.
+     * @param node Current node, hosting the operation.
+     */
+
+    protected void end (T operation, OperationTree node) {
+    }
 }
