@@ -38,9 +38,8 @@ public abstract class Executor<T extends Operation> {
     protected void begin(T operation, OperationTree node) {}
 
     protected final float process(float delta, Operation operation, OperationTree node) {
-        if (operation.isComplete()) {
+        if (operation.isComplete())
             return delta;
-        }
 
         if (!operation.started) {
             begin((T) operation, node);
@@ -49,7 +48,7 @@ public abstract class Executor<T extends Operation> {
 
         float dt = act(delta, (T) operation, node);
 
-        if (operation.isComplete()) {
+        if (operation.isComplete()){
             end((T) operation, node);
         }
 
@@ -57,12 +56,11 @@ public abstract class Executor<T extends Operation> {
     }
 
     /**
-     * Called when {@link Operation#isComplete()} returns true
+     * Called if {@link Operation#isComplete()} returns true.
      *
      * @param operation Current operation.
      * @param node Current node, hosting the operation.
      */
 
-    protected void end (T operation, OperationTree node) {
-    }
+    protected void end(T operation, OperationTree node) {}
 }
