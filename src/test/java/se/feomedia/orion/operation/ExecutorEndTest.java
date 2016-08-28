@@ -1,24 +1,23 @@
 package se.feomedia.orion.operation;
 
+import com.artemis.EntityManager;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.annotations.Wire;
-import com.badlogic.gdx.graphics.Cursor;
-import com.sun.org.apache.xerces.internal.util.ShadowedSymbolTable;
 import org.junit.Test;
 import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
 import se.feomedia.orion.OperationTree;
 import se.feomedia.orion.system.OperationSystem;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static se.feomedia.orion.OperationFactory.*;
 
 public class ExecutorEndTest {
     @Test
     public void end_test() {
         World world = new World(new WorldConfiguration()
-                .setSystem(new OperationSystem()));
+                .setSystem(OperationSystem.class));
 
         FiniteOperation fo = operation(FiniteOperation.class);
 
@@ -35,13 +34,11 @@ public class ExecutorEndTest {
         world.process();
 
         assertEquals(-1, fo.n);
-
-        world.process();
     }
 
-    public static class FiniteOperation extends Operation {
-        public int n;
 
+    public static class FiniteOperation extends Operation {
+        public int n = 0;
 
         @Override
         public Class<? extends Executor> executorType() {
@@ -55,13 +52,11 @@ public class ExecutorEndTest {
 
         @Override
         public void reset() {
-        }
 
+        }
 
         @Wire
         public static class FiniteExecutor extends Executor<FiniteOperation> {
-
-
             @Override
             protected float act(float delta, FiniteOperation operation, OperationTree node) {
                 operation.n++;
@@ -69,17 +64,14 @@ public class ExecutorEndTest {
             }
 
             @Override
-            protected void begin(FiniteOperation op, OperationTree node) {
-                op.n = 0;
+            protected void begin(FiniteOperation operation, OperationTree node) {
+                operation.n = 0;
             }
 
-
+            @Override
             protected void end(FiniteOperation operation, OperationTree node) {
                 operation.n = -1;
             }
-
-
         }
     }
-
 }
