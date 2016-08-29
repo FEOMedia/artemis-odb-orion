@@ -44,4 +44,8 @@ public abstract class Operation implements Pool.Poolable {
 		world.getSystem(OperationSystem.class).register(toNode());
 	}
 
+	@Override
+	public String toString() {
+		return  executorType().getSimpleName().replaceAll("Executor$", "");
+	}
 }

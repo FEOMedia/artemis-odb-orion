@@ -49,6 +49,12 @@ public abstract class ParentingOperation extends Operation {
 		completed = false;
 	}
 
+	@Override
+	public String toString() {
+		return super.toString()
+			+ "[" + operations.size  + "]";
+	}
+
 	@Wire
 	public abstract static class ParentingExecutor<T extends ParentingOperation> extends Executor<T> {
 		protected final float end(float delta, ParentingOperation op) {
