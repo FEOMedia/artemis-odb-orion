@@ -480,7 +480,7 @@ public final class OperationFactory {
 	 */
 	public static float seconds(float value) {
 		if (value == 0) {
-			int raw = floatToRawIntBits(value);
+			int raw = floatToRawIntBits(0);
 			value = intBitsToFloat(raw + 1);
 		}
 
