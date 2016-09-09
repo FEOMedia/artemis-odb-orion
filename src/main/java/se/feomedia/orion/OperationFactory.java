@@ -215,6 +215,14 @@ public final class OperationFactory {
 		return op;
 	}
 
+	public static Operation repeat(Operation operation) {
+		return repeat(Integer.MAX_VALUE, operation);
+	}
+
+	/**
+	 * @deprecated will soon be removed sometimes
+	 */
+	@Deprecated
 	public static Operation forever(Operation operation) {
 		return repeat(Integer.MAX_VALUE, operation);
 	}
