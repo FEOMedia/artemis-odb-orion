@@ -1,6 +1,5 @@
 package se.feomedia.orion.operation;
 
-import com.artemis.EntityManager;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.annotations.Wire;
@@ -14,64 +13,64 @@ import static org.junit.Assert.*;
 import static se.feomedia.orion.OperationFactory.*;
 
 public class ExecutorEndTest {
-    @Test
-    public void end_test() {
-        World world = new World(new WorldConfiguration()
-                .setSystem(OperationSystem.class));
+	@Test
+	public void end_test() {
+		World world = new World(new WorldConfiguration()
+			.setSystem(OperationSystem.class));
 
-        FiniteOperation fo = operation(FiniteOperation.class);
+		FiniteOperation fo = operation(FiniteOperation.class);
 
-        fo.register(world, world.create());
+		fo.register(world, world.create());
 
-        world.process();
+		world.process();
 
-        assertEquals(1, fo.n);
+		assertEquals(1, fo.n);
 
-        world.process();
+		world.process();
 
-        assertEquals(2, fo.n);
+		assertEquals(2, fo.n);
 
-        world.process();
+		world.process();
 
-        assertEquals(-1, fo.n);
-    }
+		assertEquals(-1, fo.n);
+	}
 
 
-    public static class FiniteOperation extends Operation {
-        public int n = 0;
+	public static class FiniteOperation extends Operation {
+		public int n = 0;
 
-        @Override
-        public Class<? extends Executor> executorType() {
-            return FiniteExecutor.class;
-        }
+		@Override
+		public Class<? extends Executor> executorType() {
+			return FiniteExecutor.class;
+		}
 
-        @Override
-        protected boolean isComplete() {
-            return n > 2;
-        }
+		@Override
+		protected boolean isComplete() {
+			return n > 2;
+		}
 
-        @Override
-        public void reset() {
+		@Override
+		public void reset() {
 
-        }
+		}
 
-        @Wire
-        public static class FiniteExecutor extends Executor<FiniteOperation> {
-            @Override
-            protected float act(float delta, FiniteOperation operation, OperationTree node) {
-                operation.n++;
-                return 0;
-            }
+		@Wire
+		public static class FiniteExecutor extends Executor<FiniteOperation> {
+			@Override
+			protected float act(float delta, FiniteOperation operation, OperationTree node) {
+				operation.n++;
+				return 0;
+			}
 
-            @Override
-            protected void begin(FiniteOperation operation, OperationTree node) {
-                operation.n = 0;
-            }
+			@Override
+			protected void begin(FiniteOperation operation, OperationTree node) {
+				operation.n = 0;
+			}
 
-            @Override
-            protected void end(FiniteOperation operation, OperationTree node) {
-                operation.n = -1;
-            }
-        }
-    }
+			@Override
+			protected void end(FiniteOperation operation, OperationTree node) {
+				operation.n = -1;
+			}
+		}
+	}
 }
