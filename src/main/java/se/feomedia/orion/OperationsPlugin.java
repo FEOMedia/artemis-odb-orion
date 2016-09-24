@@ -7,6 +7,7 @@ import se.feomedia.orion.system.OperationSystem;
 /**
  * Scheduled operations on entities and components.
  * @see OperationSystem
+ * @author Adrian Papari
  * @author Daan van Yperen (Integration)
  */
 public class OperationsPlugin implements ArtemisPlugin {
