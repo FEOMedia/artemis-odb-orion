@@ -58,3 +58,7 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 ```groovy
   dependencies { compile "se.feomedia.orion:artemis-odb-orion:0.1.0-SNAPSHOT" }
 ```
+
+### License
+
+Artemis-odb-orion is licensed under the Apache 2 License, meaning you can use it free of charge, without strings attached in commercial and non-commercial projects.
