@@ -13,14 +13,20 @@ import static com.badlogic.gdx.utils.NumberUtils.intBitsToFloat;
 import static java.lang.Math.max;
 
 public final class OperationFactory {
-
 	/**
 	 * Create pools with this number of preallocated operations. Setting
 	 * is global, affects all worlds.
 	 */
 	public static int initialPoolSize = 16;
 
-	private static final Vector2 xy = new Vector2();
+	private static final ThreadLocal<Vector2Pool> xy = new ThreadLocal<Vector2Pool>() {
+		@Override
+		protected Vector2Pool initialValue() {
+			return new Vector2Pool();
+		}
+	};
+
+	private int xyIndex = 0;
 
 	private static final ObjectMap<Class<? extends Operation>, Pool<?>> pools
 			= new ObjectMap<>();
@@ -515,13 +521,16 @@ public final class OperationFactory {
 
 
 	/**
-	 * Syntactic convenience returning a static {@link Vector2} - be
-	 * sure to never store the reference.
+	 * <p>Syntactic convenience returning a static {@link Vector2} - be
+	 * sure to never store the reference. At most 4 instances can
+	 * be in simultaneous use (e.g. as parameters to a method).</p>
 	 *
-	 * @return static Vector2 instance.
+	 * <p>This method is threadsafe.</p>
+	 *
+	 * @return a static Vector2 instance.
 	 */
 	public static Vector2 xy(float x, float y) {
-		return xy.set(x, y);
+		return xy.get().obtain().set(x, y);
 	}
 
 	/**
@@ -577,6 +586,22 @@ public final class OperationFactory {
 			} catch (InstantiationException	| IllegalAccessException e) {
 				throw new RuntimeException(e);
 			}
+		}
+	}
+
+	static class Vector2Pool {
+		private int count;
+		private final Vector2[] vectors;
+
+		Vector2Pool() {
+			vectors = new Vector2[0b11 + 1];
+			for (int i = 0; i < vectors.length; i++)
+				vectors[i] = new Vector2();
+		}
+
+		public Vector2 obtain() {
+			// no need to reset, as x and y are set each time
+			return vectors[count++ & 0b11];
 		}
 	}
 }
