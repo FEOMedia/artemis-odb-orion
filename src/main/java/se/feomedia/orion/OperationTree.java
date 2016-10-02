@@ -1,8 +1,10 @@
 package se.feomedia.orion;
 
+import com.artemis.link.MultiFieldMutator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.system.OperationSystem;
+import sun.awt.image.MultiResolutionToolkitImage;
 
 /**
  * <p>The registered representation of an operation. Each node holds
@@ -97,18 +99,21 @@ public class OperationTree {
 	}
 
 	public void clear() {
-		clear(this);
+		Array<Operation> cleared = MultiPool.toRemoveArray();
+		clear(this, cleared);
+
+		MultiPool.free(cleared);
 	}
 
-	private void clear(OperationTree ot) {
-		OperationFactory.free(ot.operation);
+	private void clear(OperationTree ot, Array<Operation> toRemove) {
+		toRemove.add(ot.operation);
 		ot.operation = null;
 		ot.parent = null;
 		ot.executor = null;
 
 		if (ot.children.size > 0) {
 			for (OperationTree node : ot.children) {
-				clear(node);
+				clear(node, toRemove);
 			}
 			ot.children.clear();
 		}

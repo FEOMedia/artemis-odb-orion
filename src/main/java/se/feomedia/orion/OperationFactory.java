@@ -3,8 +3,6 @@ package se.feomedia.orion;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.operation.*;
 
 import static com.badlogic.gdx.math.Interpolation.linear;
@@ -19,113 +17,101 @@ public final class OperationFactory {
 	 */
 	public static int initialPoolSize = 16;
 
-	private static final ThreadLocal<Vector2Pool> xy = new ThreadLocal<Vector2Pool>() {
-		@Override
-		protected Vector2Pool initialValue() {
-			return new Vector2Pool();
-		}
-	};
-
-	private int xyIndex = 0;
-
-	private static final ObjectMap<Class<? extends Operation>, Pool<?>> pools
-			= new ObjectMap<>();
-
-	private static final WeightPool weightPool = new WeightPool();
-
 	private OperationFactory() {}
 
 	public static SequenceOperation sequence() {
-		SequenceOperation action = operation(SequenceOperation.class);
-		return action;
+		return operation(SequenceOperation.class);
 	}
 
 	public static SequenceOperation sequence(Operation a) {
-		SequenceOperation action = operation(SequenceOperation.class);
+		SequenceOperation action = sequence();
 		action.addChild(a);
 		return action;
 	}
 
 	public static SequenceOperation sequence(Operation a, Operation b) {
-		SequenceOperation action = operation(SequenceOperation.class);
-		action.addChild(a);
+		SequenceOperation action = sequence(a);
 		action.addChild(b);
 		return action;
 	}
 
-	public static SequenceOperation sequence(Operation a, Operation b, Operation c) {
-		SequenceOperation action = operation(SequenceOperation.class);
-		action.addChild(a);
-		action.addChild(b);
+	public static SequenceOperation sequence(Operation a,
+	                                         Operation b,
+	                                         Operation c) {
+
+		SequenceOperation action = sequence(a, b);
 		action.addChild(c);
 		return action;
 	}
 
-	public static SequenceOperation sequence(Operation a, Operation b, Operation c, Operation d) {
-		SequenceOperation action = operation(SequenceOperation.class);
-		action.addChild(a);
-		action.addChild(b);
-		action.addChild(c);
+	public static SequenceOperation sequence(Operation a,
+	                                         Operation b,
+	                                         Operation c,
+	                                         Operation d) {
+
+		SequenceOperation action = sequence(a, b, c);
 		action.addChild(d);
 		return action;
 	}
 
-	public static SequenceOperation sequence(Operation a, Operation b, Operation c, Operation d, Operation ...e) {
-		SequenceOperation action = operation(SequenceOperation.class);
-		action.addChild(a);
-		action.addChild(b);
-		action.addChild(c);
-		action.addChild(d);
-		for (int i = 0; i < e.length; i++) {
+	public static SequenceOperation sequence(Operation a,
+	                                         Operation b,
+	                                         Operation c,
+	                                         Operation d,
+	                                         Operation ...e) {
+
+		SequenceOperation action = sequence(a, b, c, d);
+		for (int i = 0; i < e.length; i++)
 			action.addChild(e[i]);
-		}
+
 		return action;
 	}
 
 	public static ParallelOperation parallel() {
-		ParallelOperation action = operation(ParallelOperation.class);
-		return action;
+		return operation(ParallelOperation.class);
 	}
 
 	public static ParallelOperation parallel(Operation a) {
-		ParallelOperation action = operation(ParallelOperation.class);
+		ParallelOperation action = parallel();
 		action.addChild(a);
 		return action;
 	}
 
 	public static ParallelOperation parallel(Operation a, Operation b) {
-		ParallelOperation action = operation(ParallelOperation.class);
-		action.addChild(a);
+		ParallelOperation action = parallel(a);
 		action.addChild(b);
 		return action;
 	}
 
-	public static ParallelOperation parallel(Operation a, Operation b, Operation c) {
-		ParallelOperation action = operation(ParallelOperation.class);
-		action.addChild(a);
-		action.addChild(b);
+	public static ParallelOperation parallel(Operation a,
+	                                         Operation b,
+	                                         Operation c) {
+
+		ParallelOperation action = parallel(a, b);
 		action.addChild(c);
 		return action;
 	}
 
-	public static ParallelOperation parallel(Operation a, Operation b, Operation c, Operation d) {
-		ParallelOperation action = operation(ParallelOperation.class);
-		action.addChild(a);
-		action.addChild(b);
-		action.addChild(c);
+	public static ParallelOperation parallel(Operation a,
+	                                         Operation b,
+	                                         Operation c,
+	                                         Operation d) {
+
+		ParallelOperation action = parallel(a, b, c);
 		action.addChild(d);
 		return action;
 	}
 
-	public static ParallelOperation parallel(Operation a, Operation b, Operation c, Operation d, Operation ...e) {
-		ParallelOperation action = operation(ParallelOperation.class);
-		action.addChild(a);
-		action.addChild(b);
-		action.addChild(c);
-		action.addChild(d);
-		for (int i = 0; i < e.length; i++) {
+	public static ParallelOperation parallel(Operation a,
+	                                         Operation b,
+	                                         Operation c,
+	                                         Operation d,
+	                                         Operation ...e) {
+
+		ParallelOperation action = parallel(a, b, c, d);
+		for (int i = 0; i < e.length; i++)
 			action.addChild(e[i]);
-		}
+
 		return action;
 	}
 
@@ -146,7 +132,7 @@ public final class OperationFactory {
 	/**
 	 * <p>
 	 * Runs any operation on another entity. The forked operation
-	 * is marked as compeleted when the operation finishes or
+	 * is marked as completed when the operation finishes or
 	 * when the target entity is deleted.
 	 * </p>
 	 * <p>
@@ -225,14 +211,6 @@ public final class OperationFactory {
 		return repeat(Integer.MAX_VALUE, operation);
 	}
 
-	/**
-	 * @deprecated will soon be removed sometimes
-	 */
-	@Deprecated
-	public static Operation forever(Operation operation) {
-		return repeat(Integer.MAX_VALUE, operation);
-	}
-
 	public static DelayTickOperation delayTick(int ticksToWait) {
 		DelayTickOperation action = operation(DelayTickOperation.class);
 		action.ticksToWait = ticksToWait;
@@ -241,8 +219,7 @@ public final class OperationFactory {
 	}
 
 	public static KillOperation killEntity() {
-		KillOperation op = operation(KillOperation.class);
-		return op;
+		return operation(KillOperation.class);
 	}
 
 	private static IfElseOperation ifElse(boolean b, Operation ifTrue) {
@@ -302,13 +279,13 @@ public final class OperationFactory {
 	}
 
 	public static <T extends Operation> T operation(final Class<T> operationType) {
-		T op = pool(operationType).obtain();
+		T op = MultiPool.operation(operationType);
 		op.started = false;
 		return op;
 	}
 
 	public static Weight weight(float weight, Operation operation) {
-		Weight w = weightPool.obtain();
+		Weight w = MultiPool.weight();
 		w.weight = weight;
 		w.op = operation;
 
@@ -370,8 +347,7 @@ public final class OperationFactory {
 	public static RandomOperation random(Weight a,
 	                                     Weight b) {
 
-		RandomOperation op = operation(RandomOperation.class);
-		op.configure(a.weight, a.op);
+		RandomOperation op = random(a);
 		op.configure(b.weight, b.op);
 		return op;
 	}
@@ -380,9 +356,7 @@ public final class OperationFactory {
 	                                     Weight b,
 	                                     Weight c) {
 
-		RandomOperation op = operation(RandomOperation.class);
-		op.configure(a.weight, a.op);
-		op.configure(b.weight, b.op);
+		RandomOperation op = random(a, b);
 		op.configure(c.weight, c.op);
 		return op;
 	}
@@ -392,32 +366,13 @@ public final class OperationFactory {
 	                                     Weight c,
 	                                     Weight d) {
 
-		RandomOperation op = operation(RandomOperation.class);
-		op.configure(a.weight, a.op);
-		op.configure(b.weight, b.op);
-		op.configure(c.weight, c.op);
+		RandomOperation op = random(a, b, c);
 		op.configure(d.weight, d.op);
-		return op;
-	}
-
-	public static RandomOperation random(Weight a,
-	                                     Weight b,
-	                                     Weight c,
-	                                     Weight d,
-	                                     Weight e) {
-
-		RandomOperation op = operation(RandomOperation.class);
-		op.configure(a.weight, a.op);
-		op.configure(b.weight, b.op);
-		op.configure(c.weight, c.op);
-		op.configure(d.weight, d.op);
-		op.configure(e.weight, e.op);
 		return op;
 	}
 
 	public static RandomOperation random(Operation operation, Operation... ops) {
-		RandomOperation op = operation(RandomOperation.class);
-		op.configure(1, operation);
+		RandomOperation op = random(operation);
 		for (int i = 0; i < ops.length; i++) {
 			op.configure(1, ops[i]);
 		}
@@ -472,19 +427,12 @@ public final class OperationFactory {
 		return op;
 	}
 
-	static <T extends Operation> void free(Operation op) {
-		((Pool) pool(op.getClass())).free(op);
+	static void free(Operation op) {
+		MultiPool.free(op);
 	}
 
-	private static <T extends Operation> Pool<T> pool(Class<T> operationType) {
-		Pool<T> pool = (Pool<T>) pools.get(operationType);
-		if (pool == null) {
-			pool = new OperationPool<>(operationType, max(1, initialPoolSize));
-			pools.put(operationType, pool);
-		}
 
-		return pool;
-	}
+
 
 	/**
 	 * If value is 0, returns the next highest float value.
@@ -522,7 +470,7 @@ public final class OperationFactory {
 
 	/**
 	 * <p>Syntactic convenience returning a static {@link Vector2} - be
-	 * sure to never store the reference. At most 4 instances can
+	 * sure to never store the reference. At most 8 instances can
 	 * be in simultaneous use (e.g. as parameters to a method).</p>
 	 *
 	 * <p>This method is threadsafe.</p>
@@ -530,7 +478,7 @@ public final class OperationFactory {
 	 * @return a static Vector2 instance.
 	 */
 	public static Vector2 xy(float x, float y) {
-		return xy.get().obtain().set(x, y);
+		return MultiPool.vector2().set(x, y);
 	}
 
 	/**
@@ -557,51 +505,5 @@ public final class OperationFactory {
 		Operation op;
 	}
 
-	static class WeightPool extends Pool<Weight> {
-		@Override
-		protected Weight newObject() {
-			return new Weight();
-		}
-	}
 
-	static class OperationPool<T extends Operation> extends Pool<T> {
-		private final Class<T> operationType;
-
-		public OperationPool(Class<T> operationType, int initialSize) {
-			super(initialSize);
-			this.operationType = operationType;
-
-			Array<T> initial = new Array<>(initialSize);
-			for (int i = 0; initialSize > i; i++) {
-				initial.add(newObject());
-			}
-
-			freeAll(initial);
-		}
-
-		@Override
-		protected T newObject() {
-			try {
-				return operationType.newInstance();
-			} catch (InstantiationException	| IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
-
-	static class Vector2Pool {
-		private int count;
-		private final Vector2[] vectors;
-
-		Vector2Pool() {
-			vectors = new Vector2[0b11 + 1];
-			for (int i = 0; i < vectors.length; i++)
-				vectors[i] = new Vector2();
-		}
-
-		public Vector2 obtain() {
-			// no need to reset, as x and y are set each time
-			return vectors[count++ & 0b11];
-		}
-	}
 }
