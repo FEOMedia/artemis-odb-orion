@@ -1,10 +1,8 @@
 package se.feomedia.orion;
 
-import com.artemis.link.MultiFieldMutator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import se.feomedia.orion.system.OperationSystem;
-import sun.awt.image.MultiResolutionToolkitImage;
 
 /**
  * <p>The registered representation of an operation. Each node holds

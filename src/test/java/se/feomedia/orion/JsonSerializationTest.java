@@ -18,7 +18,6 @@ import se.feomedia.orion.system.OperationSystem;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
 import static com.artemis.Aspect.all;

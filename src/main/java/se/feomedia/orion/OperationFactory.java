@@ -2,13 +2,11 @@ package se.feomedia.orion;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.Array;
 import se.feomedia.orion.operation.*;
 
 import static com.badlogic.gdx.math.Interpolation.linear;
 import static com.badlogic.gdx.utils.NumberUtils.floatToRawIntBits;
 import static com.badlogic.gdx.utils.NumberUtils.intBitsToFloat;
-import static java.lang.Math.max;
 
 public final class OperationFactory {
 	/**
