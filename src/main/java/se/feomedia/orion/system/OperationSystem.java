@@ -90,7 +90,7 @@ public class OperationSystem extends IteratingSystem {
 			executor.initialize(world);
 
 			return executor;
-		} catch (InstantiationException | IllegalAccessException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
