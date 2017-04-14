@@ -15,9 +15,22 @@ import se.feomedia.orion.system.OperationSystem;
 public abstract class Operation implements Pool.Poolable {
 	public transient int entityId = -1;
 	protected boolean started;
+	protected boolean completed;
 
 	public abstract Class<? extends Executor> executorType();
-	protected abstract boolean isComplete();
+
+	public void rewind() {
+		completed = false;
+	}
+
+	public void reset() {
+		started = false;
+		completed = false;
+	}
+
+	public final boolean isComplete() {
+		return completed;
+	}
 
 	protected OperationTree toNode() {
 		return OperationTree.obtain(this);

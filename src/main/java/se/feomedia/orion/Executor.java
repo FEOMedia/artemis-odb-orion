@@ -46,7 +46,11 @@ public abstract class Executor<T extends Operation> {
 			operation.started = true;
 		}
 
-		float dt = act(delta, (T) operation, node);
+		float dt = 0f;
+
+		if (!operation.isComplete()) {
+			dt = act(delta, (T) operation, node);
+		}
 
 		if (operation.isComplete()) {
 			end((T) operation, node);

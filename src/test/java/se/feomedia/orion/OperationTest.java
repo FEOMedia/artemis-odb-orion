@@ -197,21 +197,9 @@ public class OperationTest {
 	}
 
 	public static class ManagerOperation extends Operation {
-		private boolean completed;
-
 		@Override
 		public Class<? extends Executor> executorType() {
 			return ManagerExecutor.class;
-		}
-
-		@Override
-		public boolean isComplete() {
-			return completed;
-		}
-
-		@Override
-		public void reset() {
-			completed = false;
 		}
 
 		@Wire

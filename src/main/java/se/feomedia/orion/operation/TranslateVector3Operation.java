@@ -17,6 +17,7 @@ public class TranslateVector3Operation extends TemporalOperation {
 
 	@Override
 	public void reset() {
+		super.reset();
 		value = null;
 	}
 

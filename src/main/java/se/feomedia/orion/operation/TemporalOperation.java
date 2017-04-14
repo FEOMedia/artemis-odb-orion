@@ -30,14 +30,16 @@ public abstract class TemporalOperation extends Operation {
 	}
 
 	@Override
-	public boolean isComplete() {
-		return acc > 0 && percent() == 1.0f;
+	public void rewind() {
+		acc = 0;
+		super.rewind();
 	}
 
 	@Override
 	public void reset() {
 		acc = 0;
 		duration = 0;
+		super.reset();
 	}
 
 	protected final float percent() {
@@ -64,6 +66,9 @@ public abstract class TemporalOperation extends Operation {
 		protected final float act(float delta, T op, OperationTree node) {
 			op.acc += delta;
 			act(delta, op.percent(), op, node);
+
+			if (op.acc > 0 && op.percent() == 1.0f)
+				op.completed = true;
 
 			// we're returning available time, hence acc - duration
 			return max(0, op.acc - op.duration);
