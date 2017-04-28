@@ -1,8 +1,14 @@
 package se.feomedia.orion;
 
 import com.artemis.EntityManager;
+import com.artemis.EntitySubscription;
+import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
+import com.artemis.utils.BitVector;
+import com.artemis.utils.IntBag;
+
+import static com.artemis.Aspect.all;
 
 public class ForkOperation extends ParentingOperation {
 	int forkEntityId = -1;
@@ -31,11 +37,35 @@ public class ForkOperation extends ParentingOperation {
 		private TagManager tags;
 		private EntityManager entityManager;
 
+		/** recreated entity ids must not pick up the last entity's op */
+		private BitVector active = new BitVector();
+
+		@Override
+		public void initialize(World world) {
+			world.getEntityManager().registerEntityStore(active);
+
+			world.getAspectSubscriptionManager()
+				.get(all())
+				.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+					@Override
+					public void inserted(IntBag entities) {}
+
+					@Override
+					public void removed(IntBag entities) {
+						int[] ids = entities.getData();
+						for (int i = 0, s = entities.size(); s > i; i++) {
+							active.unsafeClear(ids[i]);
+						}
+					}
+				});
+		}
+
 		@Override
 		protected void begin(ForkOperation op, OperationTree node) {
 			if (op.tag != null)
 				op.forkEntityId = tags.getEntity(op.tag).getId();
 
+			active.set(op.forkEntityId);
 			updateEntity(op.forkEntityId, node);
 		}
 
@@ -48,7 +78,7 @@ public class ForkOperation extends ParentingOperation {
 
 		@Override
 		protected float act(float delta, ForkOperation op, OperationTree node) {
-			if (!entityManager.isActive(op.forkEntityId))
+			if (!active.get(op.forkEntityId))
 				return 0;
 
 			return node.children().first().act(delta);
