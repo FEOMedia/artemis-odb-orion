@@ -5,7 +5,6 @@ import com.artemis.EntitySubscription;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
-import com.artemis.utils.BitVector;
 import com.artemis.utils.IntBag;
 
 import static com.artemis.Aspect.all;
@@ -38,12 +37,10 @@ public class ForkOperation extends ParentingOperation {
 		private EntityManager entityManager;
 
 		/** recreated entity ids must not pick up the last entity's op */
-		private BitVector active = new BitVector();
+		private IntBag active = new IntBag();
 
 		@Override
 		public void initialize(World world) {
-			world.getEntityManager().registerEntityStore(active);
-
 			world.getAspectSubscriptionManager()
 				.get(all())
 				.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
@@ -54,7 +51,7 @@ public class ForkOperation extends ParentingOperation {
 					public void removed(IntBag entities) {
 						int[] ids = entities.getData();
 						for (int i = 0, s = entities.size(); s > i; i++) {
-							active.unsafeClear(ids[i]);
+							active.set(ids[i], 0);
 						}
 					}
 				});
@@ -65,9 +62,11 @@ public class ForkOperation extends ParentingOperation {
 			if (op.tag != null)
 				op.forkEntityId = tags.getEntity(op.tag).getId();
 
-			if (op.forkEntityId > -1 && entityManager.isActive(op.forkEntityId)) {
-				active.unsafeSet(op.forkEntityId);
-				updateEntity(op.forkEntityId, node);
+			int id = op.forkEntityId;
+			if (id > -1 && entityManager.isActive(id)) {
+				int count = active.size() > id ? active.get(id) : 0;
+				active.set(id, count + 1);
+				updateEntity(id, node);
 			} else {
 				op.completed = true;
 			}
@@ -82,15 +81,14 @@ public class ForkOperation extends ParentingOperation {
 
 		@Override
 		protected float act(float delta, ForkOperation op, OperationTree node) {
-			if (!active.unsafeGet(op.forkEntityId))
-				return 0;
-
-			return node.children().first().act(delta);
+			return (active.get(op.forkEntityId) > 0)
+				? node.children().first().act(delta)
+				: 0;
 		}
 
 		@Override
 		protected void end(ForkOperation op, OperationTree node) {
-			active.unsafeClear(op.forkEntityId);
+			active.getData()[op.forkEntityId]--;
 		}
 	}
 }
