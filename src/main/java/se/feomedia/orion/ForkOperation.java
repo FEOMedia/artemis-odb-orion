@@ -65,8 +65,12 @@ public class ForkOperation extends ParentingOperation {
 			if (op.tag != null)
 				op.forkEntityId = tags.getEntity(op.tag).getId();
 
-			active.set(op.forkEntityId);
-			updateEntity(op.forkEntityId, node);
+			if (op.forkEntityId > -1) {
+				active.unsafeSet(op.forkEntityId);
+				updateEntity(op.forkEntityId, node);
+			} else {
+				op.completed = true;
+			}
 		}
 
 		private void updateEntity(int forkEntity, OperationTree node) {
@@ -78,10 +82,15 @@ public class ForkOperation extends ParentingOperation {
 
 		@Override
 		protected float act(float delta, ForkOperation op, OperationTree node) {
-			if (!active.get(op.forkEntityId))
+			if (!active.unsafeGet(op.forkEntityId))
 				return 0;
 
 			return node.children().first().act(delta);
+		}
+
+		@Override
+		protected void end(ForkOperation op, OperationTree node) {
+			active.unsafeClear(op.forkEntityId);
 		}
 	}
 }
