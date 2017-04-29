@@ -65,7 +65,7 @@ public class ForkOperation extends ParentingOperation {
 			if (op.tag != null)
 				op.forkEntityId = tags.getEntity(op.tag).getId();
 
-			if (op.forkEntityId > -1) {
+			if (op.forkEntityId > -1 && entityManager.isActive(op.forkEntityId)) {
 				active.unsafeSet(op.forkEntityId);
 				updateEntity(op.forkEntityId, node);
 			} else {
