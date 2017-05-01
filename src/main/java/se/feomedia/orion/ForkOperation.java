@@ -1,11 +1,13 @@
 package se.feomedia.orion;
 
+import com.artemis.ComponentMapper;
 import com.artemis.EntityManager;
 import com.artemis.EntitySubscription;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
 import com.artemis.utils.IntBag;
+import se.feomedia.orion.component.Forked;
 
 import static com.artemis.Aspect.all;
 
@@ -33,14 +35,16 @@ public class ForkOperation extends ParentingOperation {
 
 	@Wire(failOnNull = false)
 	public static class ForkExecutor extends ParentingExecutor<ForkOperation> {
+		private ComponentMapper<Forked> forkedMapper;
+
 		private TagManager tags;
 		private EntityManager entityManager;
 
-		/** recreated entity ids must not pick up the last entity's op */
-		private IntBag active = new IntBag();
-
 		@Override
 		public void initialize(World world) {
+			// while subscribing to Forked.class would have been the intuitively
+			// more correct approach, `removed` would not fire if the entity
+			// was deleted during the same system tick as it was forked to.
 			world.getAspectSubscriptionManager()
 				.get(all())
 				.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
@@ -51,7 +55,12 @@ public class ForkOperation extends ParentingOperation {
 					public void removed(IntBag entities) {
 						int[] ids = entities.getData();
 						for (int i = 0, s = entities.size(); s > i; i++) {
-							active.set(ids[i], 0);
+							Forked forked = forkedMapper.get(ids[i]);
+							if (forked == null)
+								continue;
+
+							for (ForkOperation fo : forked.owners)
+								fo.completed = true;
 						}
 					}
 				});
@@ -62,11 +71,10 @@ public class ForkOperation extends ParentingOperation {
 			if (op.tag != null)
 				op.forkEntityId = tags.getEntity(op.tag).getId();
 
-			int id = op.forkEntityId;
-			if (id > -1 && entityManager.isActive(id)) {
-				int count = active.size() > id ? active.get(id) : 0;
-				active.set(id, count + 1);
-				updateEntity(id, node);
+			int forked = op.forkEntityId;
+			if (forked != -1 && entityManager.isActive(forked)) {
+				updateEntity(forked, node);
+				forkedMapper.create(forked).owners.add(op);
 			} else {
 				op.completed = true;
 			}
@@ -81,14 +89,28 @@ public class ForkOperation extends ParentingOperation {
 
 		@Override
 		protected float act(float delta, ForkOperation op, OperationTree node) {
-			return (active.get(op.forkEntityId) > 0)
-				? node.children().first().act(delta)
-				: 0;
+			if (op.forkEntityId != -1 && entityManager.isActive(op.forkEntityId)) {
+				OperationTree forkedOp = node.children().first();
+				delta = forkedOp.act(delta);
+				op.completed |= forkedOp.isComplete();
+			} else {
+				op.completed = true;
+			}
+
+			return delta;
 		}
 
 		@Override
 		protected void end(ForkOperation op, OperationTree node) {
-			active.getData()[op.forkEntityId]--;
+			int id = op.forkEntityId;
+			if (id != -1 && entityManager.isActive(id)) {
+				Forked forked = forkedMapper.get(id);
+				if (forked != null) {
+					forked.owners.removeValue(op, true);
+					if (forked.owners.size == 0)
+						forkedMapper.remove(id);
+				}
+			}
 		}
 	}
 }

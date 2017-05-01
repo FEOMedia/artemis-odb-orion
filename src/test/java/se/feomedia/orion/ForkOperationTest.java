@@ -13,7 +13,6 @@ import static se.feomedia.orion.OperationFactory.*;
 import static se.feomedia.orion.OperationTestUtil.operatives;
 import static se.feomedia.orion.OperationTestUtil.process;
 
-
 @Wire(failOnNull = false)
 public class ForkOperationTest {
 	private ComponentMapper<RecordOperationId> idMapper;
@@ -134,6 +133,59 @@ public class ForkOperationTest {
 		assertEquals(f1, idMapper.get(f1).idFromOperation);
 		assertEquals(f2, idMapper.get(f2).idFromOperation);
 		assertTrue(poke[0]);
+	}
+
+	@Test
+	public void recreated_entities_not_assinged_old_fork_op() {
+		final World world = new World(new WorldConfiguration()
+			.setSystem(OperationSystem.class)
+			.setSystem(TagManager.class));
+
+		world.inject(this);
+
+		final int e0 = createForked(world);
+		int root = world.create();
+
+		parallel(
+			fork(e0, sequence(
+				delayTick(1),
+				run(new Runnable() {
+					@Override
+					public void run() {
+						fail("should have been void together with original forked entity");
+					}
+				}))
+			),
+			run(new Runnable() {
+				@Override
+				public void run() {
+					// see fail() above
+					world.delete(e0);
+				}
+			})
+		).register(world, root);
+
+		// forks to and simultaneously kills forked entity
+		process(world);
+
+		EntityManager em = world.getEntityManager();
+		assertFalse(em.isActive(e0));
+
+		int e0b = createForked(world);
+
+		assertEquals("should be reassigned old entity id", e0, e0b);
+
+		unique("2nd",
+			fork(e0b, sequence(
+				delayTick(1),
+				killEntity()
+			))
+		).register(world, root);
+
+		process(world); // delayTick 1
+		process(world); // killing e0b
+
+		assertFalse(em.isActive(e0b));
 	}
 
 	private int createForked(World world, String tag) {
