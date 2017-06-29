@@ -2,10 +2,8 @@ package se.feomedia.orion.system;
 
 import com.artemis.*;
 import com.artemis.systems.IteratingSystem;
-import com.badlogic.gdx.math.OrionKryoSerialization;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.esotericsoftware.kryo.Kryo;
 import se.feomedia.orion.Executor;
 import se.feomedia.orion.Operation;
 import se.feomedia.orion.OperationTree;
@@ -19,7 +17,6 @@ public class OperationSystem extends IteratingSystem {
 	private ObjectMap<Class<? extends Executor>, Executor> executors = new ObjectMap<>();
 
 	private Operative voidEntityOperations = new Operative();
-	public Kryo kryo;
 
 	public OperationSystem() {
 		super(all(Operative.class));
@@ -36,14 +33,7 @@ public class OperationSystem extends IteratingSystem {
 	}
 
 	@Override
-	protected void initialize() {
-		kryo = new Kryo();
-		OrionKryoSerialization.configure(kryo);
-	}
-
-	public <T extends Operation> T copy(T operation) {
-		return kryo.copy(operation);
-	}
+	protected void initialize() { }
 
 	public Array<OperationTree> getVoidEntityOperations() {
 		return voidEntityOperations.operations;

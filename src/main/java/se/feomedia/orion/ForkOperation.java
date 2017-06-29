@@ -33,6 +33,13 @@ public class ForkOperation extends ParentingOperation {
 		forkEntityId = -1;
 	}
 
+	/**
+	 * A method created for one internal case. You should pretend it doesn't exist at all.
+	 */
+	public void markCompleted() {
+		completed = true;
+	}
+
 	@Wire(failOnNull = false)
 	public static class ForkExecutor extends ParentingExecutor<ForkOperation> {
 		private ComponentMapper<Forked> forkedMapper;

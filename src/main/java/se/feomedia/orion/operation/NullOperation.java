@@ -13,12 +13,9 @@ public class NullOperation extends Operation {
 	}
 
 	@Override
-	protected boolean isComplete() {
-		return true;
+	public void reset() {
+		completed = true;
 	}
-
-	@Override
-	public void reset() {}
 
 	@Wire
 	public static class NullExecutor extends Executor<NullOperation> {
@@ -26,7 +23,8 @@ public class NullOperation extends Operation {
 		protected float act(float delta, NullOperation operation, OperationTree node) {
 			// this will never run, but the executor must still be resolved by
 			// the OperationSystem.
-			return delta;
+			throw new RuntimeException("this should not run!");
+//			return delta;
 		}
 	}
 }

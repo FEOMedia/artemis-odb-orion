@@ -14,7 +14,7 @@ public class Forked extends PooledComponent {
 		for (int i = 0, s = owners.size; s > i ; i++) {
 			ForkOperation op = owners.get(i);
 			if (op != null) {
-				op.completed = true;
+				op.markCompleted();
 			}
 		}
 

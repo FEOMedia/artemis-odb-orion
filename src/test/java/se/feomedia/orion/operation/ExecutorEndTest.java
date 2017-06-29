@@ -44,21 +44,15 @@ public class ExecutorEndTest {
 			return FiniteExecutor.class;
 		}
 
-		@Override
-		protected boolean isComplete() {
-			return n > 2;
-		}
-
-		@Override
-		public void reset() {
-
-		}
-
 		@Wire
 		public static class FiniteExecutor extends Executor<FiniteOperation> {
 			@Override
 			protected float act(float delta, FiniteOperation operation, OperationTree node) {
 				operation.n++;
+
+				if (operation.n > 2)
+					operation.completed = true;
+
 				return 0;
 			}
 

@@ -75,10 +75,10 @@ public class RepeatOperationTest  {
 		).register(world, world.create());
 
 		process(world);
-		assertEquals(2, instances.size);
+		assertEquals(1, instances.size);
 
 		process(world); // just making sure nothing new happens
-		assertEquals(2, instances.size);
+		assertEquals(1, instances.size);
 
 		assertTrue(instances.contains(
 			System.identityHashCode(operation(SelfTrackingOperation.class))));
@@ -93,13 +93,15 @@ public class RepeatOperationTest  {
 		}
 
 		@Override
-		public void reset() {
+		public void rewind() {
+			super.rewind();
 			counter = 1;
 		}
 
 		@Override
-		protected boolean isComplete() {
-			return counter == 2;
+		public void reset() {
+			super.reset();
+			counter = 1;
 		}
 
 		@Wire
@@ -112,6 +114,9 @@ public class RepeatOperationTest  {
 				counter[0]++;
 				op.counter++;
 				assertEquals(2, op.counter);
+
+				if (op.counter == 2)
+					op.completed = true;
 
 				return 0;
 			}
@@ -141,7 +146,6 @@ public class RepeatOperationTest  {
 
 	public static class InstantOperation extends Operation {
 		public static int invocations;
-		private boolean complete;
 
 
 		@Override
@@ -149,21 +153,11 @@ public class RepeatOperationTest  {
 			return InstantExecutor.class;
 		}
 
-		@Override
-		protected boolean isComplete() {
-			return complete;
-		}
-
-		@Override
-		public void reset() {
-			complete = false;
-		}
-
 		public static class InstantExecutor extends Executor<InstantOperation> {
 			@Override
 			protected float act(float delta, InstantOperation op, OperationTree node) {
 				invocations++;
-				op.complete = true;
+				op.completed = true;
 				return delta;
 			}
 		}

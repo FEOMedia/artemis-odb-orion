@@ -86,7 +86,7 @@ public class VoidEntityOperationTest {
 		assertEquals(null, eOp2.s);
 
 		w.delta = .1f;
-		w.process(); // 4
+		w.process(); // 4 - when whole sequences finished
 
 		assertEquals("hi!!!", op.s);
 		assertEquals("hepp!!!", op2.s);

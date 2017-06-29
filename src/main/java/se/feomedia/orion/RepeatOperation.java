@@ -1,6 +1,7 @@
 package se.feomedia.orion;
 
 import com.artemis.annotations.Wire;
+import com.badlogic.gdx.utils.Array;
 import se.feomedia.orion.system.OperationSystem;
 
 /**
@@ -17,8 +18,14 @@ public class RepeatOperation extends ParentingOperation {
 		return RepeatExecutor.class;
 	}
 
-	public boolean isComplete() {
-		return acc >= total;
+	@Override
+	public void rewind() {
+		super.rewind();
+		acc = 0;
+
+		if (repeated != null) {
+			repeated.rewind();
+		}
 	}
 
 	@Override
@@ -43,7 +50,8 @@ public class RepeatOperation extends ParentingOperation {
 			super.begin(op, node);
 			if (op.repeated == null) {
 				OperationTree childNode = node.children().get(0);
-				op.repeated = operations.copy(childNode.operation);
+				op.repeated = childNode.operation;
+				op.repeated.rewind();
 			}
 		}
 
@@ -53,27 +61,21 @@ public class RepeatOperation extends ParentingOperation {
 
 			while (op.acc < op.total && delta > 0) {
 				delta = child.act(delta);
+
 				if (child.isComplete()) {
 					op.acc++;
-					child = replaceChild(node);
+
+					if (op.acc >= op.total) {
+						op.completed = true;
+						op.repeated.rewind();
+					}
+					else {
+						child.operation.rewind();
+					}
 				}
 			}
 
 			return delta;
-		}
-
-		private OperationTree replaceChild(OperationTree node) {
-			RepeatOperation op = (RepeatOperation) node.operation;
-
-			OperationTree oldChild = node.children().pop();
-
-			Operation copy = operations.copy(op.repeated);
-			node.add(copy.toNode());
-			node.initialize(operations, op.entityId);
-
-			// reclaiming objects
-			oldChild.clear();
-			return node.children().first();
 		}
 	}
 }

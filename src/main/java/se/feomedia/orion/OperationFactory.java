@@ -278,7 +278,6 @@ public final class OperationFactory {
 
 	public static <T extends Operation> T operation(final Class<T> operationType) {
 		T op = MultiPool.operation(operationType);
-		op.started = false;
 		return op;
 	}
 

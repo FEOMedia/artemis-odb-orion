@@ -16,14 +16,8 @@ import static se.feomedia.orion.OperationFactory.operation;
  *
  */
 public abstract class ParentingOperation extends Operation {
-	public boolean completed;
-
 	protected Array<Operation> operations = new Array<>(true, 8);
 
-	@Override
-	protected boolean isComplete() {
-		return completed;
-	}
 
 	public void addChild(Operation op) {
 		if (op == null)
@@ -44,9 +38,17 @@ public abstract class ParentingOperation extends Operation {
 	}
 
 	@Override
+	public void rewind() {
+		super.rewind();
+		for (int i = 0, s = operations.size; i < s; i++) {
+			operations.get(i).rewind();
+		}
+	}
+
+	@Override
 	public void reset() {
 		operations.clear();
-		completed = false;
+		super.reset();
 	}
 
 	@Override

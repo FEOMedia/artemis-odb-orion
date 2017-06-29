@@ -14,12 +14,8 @@ public class DelayTickOperation extends Operation {
 	}
 
 	@Override
-	protected boolean isComplete() {
-		return acc == ticksToWait;
-	}
-
-	@Override
 	public void reset() {
+		super.reset();
 		acc = ticksToWait = 0;
 	}
 
@@ -28,6 +24,9 @@ public class DelayTickOperation extends Operation {
 		@Override
 		protected float act(float delta, DelayTickOperation op, OperationTree node) {
 			op.acc++;
+			if (op.acc >= op.ticksToWait) {
+				op.completed = true;
+			}
 			return 0;
 		}
 	}
