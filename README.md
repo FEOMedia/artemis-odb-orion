@@ -58,7 +58,13 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 
 #### Gradle
 ```groovy
-  dependencies { compile "se.feomedia.orion:artemis-odb-orion:0.1.0-SNAPSHOT" }
+  allprojects {
+    repositories {
+      maven { url "https://jitpack.io" }    
+    }
+  }
+
+  dependencies { compile "com.github.FEOMedia:artemis-odb-orion:-SNAPSHOT" }
 ```
 
 ### License
